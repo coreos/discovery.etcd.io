@@ -1,0 +1,4 @@
+discovery
+=========
+
+etcd discovery service
