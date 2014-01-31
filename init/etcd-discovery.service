@@ -1,0 +1,11 @@
+[Unit]
+Description=etcd Discovery service
+Requires=network.target
+After=multi-user.target
+
+[Service]
+Type=simple
+ExecStart=/srv/discovery/discovery
+
+[Install]
+WantedBy=multi-user.target
