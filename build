@@ -1,0 +1,3 @@
+#!/bin/sh -e
+
+go run third_party.go install github.com/coreos/discovery
