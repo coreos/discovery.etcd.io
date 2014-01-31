@@ -1,15 +1,24 @@
 package main
 
 import (
-    "fmt"
-    "net/http"
+	"net/http"
+
+	"github.com/coreos/go-systemd/activation"
+	"github.com/gorilla/mux"
 )
 
-func handler(w http.ResponseWriter, r *http.Request) {
-    fmt.Fprintf(w, "discovery.etcd.io")
-}
-
 func main() {
-    http.HandleFunc("/", handler)
-    http.ListenAndServe(":80", nil)
+	listeners, err := activation.Listeners(true)
+	if err != nil {
+		panic(err)
+	}
+
+	if len(listeners) != 1 {
+		panic("Unexpected number of socket activation fds")
+	}
+
+	r := mux.NewRouter()
+	r.HandleFunc("/", HomeHandler)
+	r.HandleFunc("/new", NewHandler)
+	http.Handle("/", r)
 }
