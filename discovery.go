@@ -1,12 +1,11 @@
 package main
 
 import (
-	"fmt"
+	"flag"
 	"log"
 	"net/http"
 
 	"github.com/coreos/go-systemd/activation"
-	"github.com/gorilla/mux"
 
 	_ "github.com/coreos/etcd-discovery/http"
 )
@@ -16,7 +15,7 @@ var addr = flag.String("addr", "", "web service address")
 func main() {
 	log.SetFlags(0)
 
-	if addr != "" {
+	if *addr != "" {
 		http.ListenAndServe(*addr, nil)
 	}
 
