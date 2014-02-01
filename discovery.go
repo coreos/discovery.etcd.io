@@ -14,6 +14,7 @@ var addr = flag.String("addr", "", "web service address")
 
 func main() {
 	log.SetFlags(0)
+	flag.Parse()
 
 	if *addr != "" {
 		http.ListenAndServe(*addr, nil)
