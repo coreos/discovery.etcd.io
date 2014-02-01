@@ -1,0 +1,406 @@
+_version:
+	.ascii "Darwin Kernel Version 10.8.0: Tue Jun  7 16:32:41 PDT 2011; root:xnu-1504.15.3~1/RELEASE_X86_64\0"
+
+.globl _current_thread
+_current_thread:
+// 0xffffff800022b899 <current_thread+0>:	push   %rbp
+	.byte 0x55;
+// 0xffffff800022b89a <current_thread+1>:	mov    %rsp,%rbp
+	.byte 0x48;.byte 0x89;.byte 0xe5;
+// 0xffffff800022b89d <current_thread+4>:	mov    %gs:0x8,%rax
+	.byte 0x65;.byte 0x48;.byte 0x8b;.byte 0x04;.byte 0x25;.byte 0x08;.byte 0x00;.byte 0x00;.byte 0x00;
+// 0xffffff800022b8a6 <current_thread+13>:	leaveq 
+	.byte 0xc9;
+// 0xffffff800022b8a7 <current_thread+14>:	retq   
+	.byte 0xc3;
+
+.globl _bsd_ast
+_bsd_ast:
+// 0xffffff800048852b <bsd_ast+0>:	push   %rbp
+	.byte 0x55;
+// 0xffffff800048852c <bsd_ast+1>:	mov    %rsp,%rbp
+	.byte 0x48;.byte 0x89;.byte 0xe5;
+// 0xffffff800048852f <bsd_ast+4>:	push   %r12
+	.byte 0x41;.byte 0x54;
+// 0xffffff8000488531 <bsd_ast+6>:	push   %rbx
+	.byte 0x53;
+// 0xffffff8000488532 <bsd_ast+7>:	sub    $0x20,%rsp
+	.byte 0x48;.byte 0x83;.byte 0xec;.byte 0x20;
+// 0xffffff8000488536 <bsd_ast+11>:	mov    %rdi,%rbx
+	.byte 0x48;.byte 0x89;.byte 0xfb;
+// 0xffffff8000488539 <bsd_ast+14>:	callq  0xffffff80002553b4 <current_proc>
+	.byte 0xe8;.byte 0x76;.byte 0xce;.byte 0xdc;.byte 0xff;
+// 0xffffff800048853e <bsd_ast+19>:	mov    %rax,%r12
+	.byte 0x49;.byte 0x89;.byte 0xc4;
+// 0xffffff8000488541 <bsd_ast+22>:	mov    %rbx,%rdi
+	.byte 0x48;.byte 0x89;.byte 0xdf;
+// 0xffffff8000488544 <bsd_ast+25>:	callq  0xffffff800020ec3c <get_bsdthread_info>
+	.byte 0xe8;.byte 0xf3;.byte 0x66;.byte 0xd8;.byte 0xff;
+// 0xffffff8000488549 <bsd_ast+30>:	mov    %rax,%rbx
+	.byte 0x48;.byte 0x89;.byte 0xc3;
+// 0xffffff800048854c <bsd_ast+33>:	test   %r12,%r12
+	.byte 0x4d;.byte 0x85;.byte 0xe4;
+// 0xffffff800048854f <bsd_ast+36>:	je     0xffffff800048883b <bsd_ast+784>
+	.byte 0x0f;.byte 0x84;.byte 0xe6;.byte 0x02;.byte 0x00;.byte 0x00;
+// 0xffffff8000488555 <bsd_ast+42>:	mov    0x148(%r12),%eax
+	.byte 0x41;.byte 0x8b;.byte 0x84;.byte 0x24;.byte 0x48;.byte 0x01;.byte 0x00;.byte 0x00;
+// 0xffffff800048855d <bsd_ast+50>:	and    $0x8020,%eax
+	.byte 0x25;.byte 0x20;.byte 0x80;.byte 0x00;.byte 0x00;
+// 0xffffff8000488562 <bsd_ast+55>:	cmp    $0x8020,%eax
+	.byte 0x3d;.byte 0x20;.byte 0x80;.byte 0x00;.byte 0x00;
+// 0xffffff8000488567 <bsd_ast+60>:	jne    0xffffff800048858f <bsd_ast+100>
+	.byte 0x75;.byte 0x26;
+// 0xffffff8000488569 <bsd_ast+62>:	callq  0xffffff80002cf1b0 <get_useraddr>
+	.byte 0xe8;.byte 0x42;.byte 0x6c;.byte 0xe4;.byte 0xff;
+// 0xffffff800048856e <bsd_ast+67>:	mov    %eax,%esi
+	.byte 0x89;.byte 0xc6;
+// 0xffffff8000488570 <bsd_ast+69>:	mov    $0x1,%edx
+	.byte 0xba;.byte 0x01;.byte 0x00;.byte 0x00;.byte 0x00;
+// 0xffffff8000488575 <bsd_ast+74>:	mov    %r12,%rdi
+	.byte 0x4c;.byte 0x89;.byte 0xe7;
+// 0xffffff8000488578 <bsd_ast+77>:	callq  0xffffff80004925c3 <addupc_task>
+	call _psignal_internal
+// 0xffffff800048857d <bsd_ast+82>:	lea    0x148(%r12),%rsi
+	.byte 0x49;.byte 0x8d;.byte 0xb4;.byte 0x24;.byte 0x48;.byte 0x01;.byte 0x00;.byte 0x00;
+// 0xffffff8000488585 <bsd_ast+90>:	mov    $0xffff7fff,%edi
+	.byte 0xbf;.byte 0xff;.byte 0x7f;.byte 0xff;.byte 0xff;
+// 0xffffff800048858a <bsd_ast+95>:	callq  0xffffff800025551f <OSBitAndAtomic>
+	.byte 0xe8;.byte 0x90;.byte 0xcf;.byte 0xdc;.byte 0xff;
+// 0xffffff800048858f <bsd_ast+100>:	cmpq   $0x0,0x1b0(%r12)
+	.byte 0x49;.byte 0x83;.byte 0xbc;.byte 0x24;.byte 0xb0;.byte 0x01;.byte 0x00;.byte 0x00;.byte 0x00;
+// 0xffffff8000488598 <bsd_ast+109>:	jne    0xffffff80004885a6 <bsd_ast+123>
+	.byte 0x75;.byte 0x0c;
+// 0xffffff800048859a <bsd_ast+111>:	mov    0x1b8(%r12),%eax
+	.byte 0x41;.byte 0x8b;.byte 0x84;.byte 0x24;.byte 0xb8;.byte 0x01;.byte 0x00;.byte 0x00;
+// 0xffffff80004885a2 <bsd_ast+119>:	test   %eax,%eax
+	.byte 0x85;.byte 0xc0;
+// 0xffffff80004885a4 <bsd_ast+121>:	je     0xffffff800048861b <bsd_ast+240>
+	.byte 0x74;.byte 0x75;
+// 0xffffff80004885a6 <bsd_ast+123>:	mov    0x18(%r12),%rdi
+	.byte 0x49;.byte 0x8b;.byte 0x7c;.byte 0x24;.byte 0x18;
+// 0xffffff80004885ab <bsd_ast+128>:	lea    -0x14(%rbp),%rdx
+	.byte 0x48;.byte 0x8d;.byte 0x55;.byte 0xec;
+// 0xffffff80004885af <bsd_ast+132>:	mov    $0x1,%esi
+	.byte 0xbe;.byte 0x01;.byte 0x00;.byte 0x00;.byte 0x00;
+// 0xffffff80004885b4 <bsd_ast+137>:	callq  0xffffff80002835c6 <task_vtimer_update>
+	call _psignal_internal
+// 0xffffff80004885b9 <bsd_ast+142>:	mov    -0x14(%rbp),%edx
+	.byte 0x8b;.byte 0x55;.byte 0xec;
+// 0xffffff80004885bc <bsd_ast+145>:	lea    0x1a0(%r12),%rsi
+	.byte 0x49;.byte 0x8d;.byte 0xb4;.byte 0x24;.byte 0xa0;.byte 0x01;.byte 0x00;.byte 0x00;
+// 0xffffff80004885c4 <bsd_ast+153>:	mov    %r12,%rdi
+	.byte 0x4c;.byte 0x89;.byte 0xe7;
+// 0xffffff80004885c7 <bsd_ast+156>:	callq  0xffffff800048ea33 <itimerdecr>
+	.byte 0xe8;.byte 0x67;.byte 0x64;.byte 0x00;.byte 0x00;
+// 0xffffff80004885cc <bsd_ast+161>:	test   %eax,%eax
+	.byte 0x85;.byte 0xc0;
+// 0xffffff80004885ce <bsd_ast+163>:	jne    0xffffff800048861b <bsd_ast+240>
+	.byte 0x75;.byte 0x4b;
+// 0xffffff80004885d0 <bsd_ast+165>:	cmpq   $0x0,0x1b0(%r12)
+	.byte 0x49;.byte 0x83;.byte 0xbc;.byte 0x24;.byte 0xb0;.byte 0x01;.byte 0x00;.byte 0x00;.byte 0x00;
+// 0xffffff80004885d9 <bsd_ast+174>:	jne    0xffffff80004885e7 <bsd_ast+188>
+	.byte 0x75;.byte 0x0c;
+// 0xffffff80004885db <bsd_ast+176>:	mov    0x1b8(%r12),%eax
+	.byte 0x41;.byte 0x8b;.byte 0x84;.byte 0x24;.byte 0xb8;.byte 0x01;.byte 0x00;.byte 0x00;
+// 0xffffff80004885e3 <bsd_ast+184>:	test   %eax,%eax
+	.byte 0x85;.byte 0xc0;
+// 0xffffff80004885e5 <bsd_ast+186>:	je     0xffffff80004885f8 <bsd_ast+205>
+	.byte 0x74;.byte 0x11;
+// 0xffffff80004885e7 <bsd_ast+188>:	mov    0x18(%r12),%rdi
+	.byte 0x49;.byte 0x8b;.byte 0x7c;.byte 0x24;.byte 0x18;
+// 0xffffff80004885ec <bsd_ast+193>:	mov    $0x1,%esi
+	.byte 0xbe;.byte 0x01;.byte 0x00;.byte 0x00;.byte 0x00;
+// 0xffffff80004885f1 <bsd_ast+198>:	callq  0xffffff8000283509 <task_vtimer_set>
+	call _task_vtimer_set
+// 0xffffff80004885f6 <bsd_ast+203>:	jmp    0xffffff8000488607 <bsd_ast+220>
+	.byte 0xeb;.byte 0x0f;
+// 0xffffff80004885f8 <bsd_ast+205>:	mov    0x18(%r12),%rdi
+	.byte 0x49;.byte 0x8b;.byte 0x7c;.byte 0x24;.byte 0x18;
+// 0xffffff80004885fd <bsd_ast+210>:	mov    $0x1,%esi
+	.byte 0xbe;.byte 0x01;.byte 0x00;.byte 0x00;.byte 0x00;
+// 0xffffff8000488602 <bsd_ast+215>:	callq  0xffffff800028267d <task_vtimer_clear>
+	call _task_vtimer_clear
+// 0xffffff8000488607 <bsd_ast+220>:	mov    $0x1a,%r8d
+	.byte 0x41;.byte 0xb8;.byte 0x1a;.byte 0x00;.byte 0x00;.byte 0x00;
+// 0xffffff800048860d <bsd_ast+226>:	xor    %ecx,%ecx
+	.byte 0x31;.byte 0xc9;
+// 0xffffff800048860f <bsd_ast+228>:	xor    %edx,%edx
+	.byte 0x31;.byte 0xd2;
+// 0xffffff8000488611 <bsd_ast+230>:	xor    %esi,%esi
+	.byte 0x31;.byte 0xf6;
+// 0xffffff8000488613 <bsd_ast+232>:	mov    %r12,%rdi
+	.byte 0x4c;.byte 0x89;.byte 0xe7;
+// 0xffffff8000488616 <bsd_ast+235>:	callq  0xffffff800024d36f <threadsignal+244>
+	call _psignal_internal
+// 0xffffff800048861b <bsd_ast+240>:	cmpq   $0x0,0x1d0(%r12)
+	.byte 0x49;.byte 0x83;.byte 0xbc;.byte 0x24;.byte 0xd0;.byte 0x01;.byte 0x00;.byte 0x00;.byte 0x00;
+// 0xffffff8000488624 <bsd_ast+249>:	jne    0xffffff8000488632 <bsd_ast+263>
+	.byte 0x75;.byte 0x0c;
+// 0xffffff8000488626 <bsd_ast+251>:	mov    0x1d8(%r12),%eax
+	.byte 0x41;.byte 0x8b;.byte 0x84;.byte 0x24;.byte 0xd8;.byte 0x01;.byte 0x00;.byte 0x00;
+// 0xffffff800048862e <bsd_ast+259>:	test   %eax,%eax
+	.byte 0x85;.byte 0xc0;
+// 0xffffff8000488630 <bsd_ast+261>:	je     0xffffff80004886a8 <bsd_ast+381>
+	.byte 0x74;.byte 0x76;
+// 0xffffff8000488632 <bsd_ast+263>:	mov    0x18(%r12),%rdi
+	.byte 0x49;.byte 0x8b;.byte 0x7c;.byte 0x24;.byte 0x18;
+// 0xffffff8000488637 <bsd_ast+268>:	lea    -0x14(%rbp),%rdx
+	.byte 0x48;.byte 0x8d;.byte 0x55;.byte 0xec;
+// 0xffffff800048863b <bsd_ast+272>:	mov    $0x2,%esi
+	.byte 0xbe;.byte 0x02;.byte 0x00;.byte 0x00;.byte 0x00;
+// 0xffffff8000488640 <bsd_ast+277>:	callq  0xffffff80002835c6 <task_vtimer_update>
+	.byte 0xe8;.byte 0x81;.byte 0xaf;.byte 0xdf;.byte 0xff;
+// 0xffffff8000488645 <bsd_ast+282>:	mov    -0x14(%rbp),%edx
+	.byte 0x8b;.byte 0x55;.byte 0xec;
+// 0xffffff8000488648 <bsd_ast+285>:	lea    0x1c0(%r12),%rsi
+	.byte 0x49;.byte 0x8d;.byte 0xb4;.byte 0x24;.byte 0xc0;.byte 0x01;.byte 0x00;.byte 0x00;
+// 0xffffff8000488650 <bsd_ast+293>:	mov    %r12,%rdi
+	.byte 0x4c;.byte 0x89;.byte 0xe7;
+// 0xffffff8000488653 <bsd_ast+296>:	callq  0xffffff800048ea33 <itimerdecr>
+	.byte 0xe8;.byte 0xdb;.byte 0x63;.byte 0x00;.byte 0x00;
+// 0xffffff8000488658 <bsd_ast+301>:	test   %eax,%eax
+	.byte 0x85;.byte 0xc0;
+// 0xffffff800048865a <bsd_ast+303>:	jne    0xffffff80004886a8 <bsd_ast+381>
+	.byte 0x75;.byte 0x4c;
+// 0xffffff800048865c <bsd_ast+305>:	cmpq   $0x0,0x1d0(%r12)
+	.byte 0x49;.byte 0x83;.byte 0xbc;.byte 0x24;.byte 0xd0;.byte 0x01;.byte 0x00;.byte 0x00;.byte 0x00;
+// 0xffffff8000488665 <bsd_ast+314>:	jne    0xffffff8000488674 <bsd_ast+329>
+	.byte 0x75;.byte 0x0d;
+// 0xffffff8000488667 <bsd_ast+316>:	mov    0x1d8(%r12),%r11d
+	.byte 0x45;.byte 0x8b;.byte 0x9c;.byte 0x24;.byte 0xd8;.byte 0x01;.byte 0x00;.byte 0x00;
+// 0xffffff800048866f <bsd_ast+324>:	test   %r11d,%r11d
+	.byte 0x45;.byte 0x85;.byte 0xdb;
+// 0xffffff8000488672 <bsd_ast+327>:	je     0xffffff8000488685 <bsd_ast+346>
+	.byte 0x74;.byte 0x11;
+// 0xffffff8000488674 <bsd_ast+329>:	mov    0x18(%r12),%rdi
+	.byte 0x49;.byte 0x8b;.byte 0x7c;.byte 0x24;.byte 0x18;
+// 0xffffff8000488679 <bsd_ast+334>:	mov    $0x2,%esi
+	.byte 0xbe;.byte 0x02;.byte 0x00;.byte 0x00;.byte 0x00;
+// 0xffffff800048867e <bsd_ast+339>:	callq  0xffffff8000283509 <task_vtimer_set>
+	call _task_vtimer_set
+// 0xffffff8000488683 <bsd_ast+344>:	jmp    0xffffff8000488694 <bsd_ast+361>
+	.byte 0xeb;.byte 0x0f;
+// 0xffffff8000488685 <bsd_ast+346>:	mov    0x18(%r12),%rdi
+	.byte 0x49;.byte 0x8b;.byte 0x7c;.byte 0x24;.byte 0x18;
+// 0xffffff800048868a <bsd_ast+351>:	mov    $0x2,%esi
+	.byte 0xbe;.byte 0x02;.byte 0x00;.byte 0x00;.byte 0x00;
+// 0xffffff800048868f <bsd_ast+356>:	callq  0xffffff800028267d <task_vtimer_clear>
+	call _task_vtimer_clear
+// 0xffffff8000488694 <bsd_ast+361>:	mov    $0x1b,%r8d
+	.byte 0x41;.byte 0xb8;.byte 0x1b;.byte 0x00;.byte 0x00;.byte 0x00;
+// 0xffffff800048869a <bsd_ast+367>:	xor    %ecx,%ecx
+	.byte 0x31;.byte 0xc9;
+// 0xffffff800048869c <bsd_ast+369>:	xor    %edx,%edx
+	.byte 0x31;.byte 0xd2;
+// 0xffffff800048869e <bsd_ast+371>:	xor    %esi,%esi
+	.byte 0x31;.byte 0xf6;
+// 0xffffff80004886a0 <bsd_ast+373>:	mov    %r12,%rdi
+	.byte 0x4c;.byte 0x89;.byte 0xe7;
+// 0xffffff80004886a3 <bsd_ast+376>:	callq  0xffffff800024d36f <threadsignal+244>
+	call _psignal_internal
+// 0xffffff80004886a8 <bsd_ast+381>:	cmpq   $0x0,0x1e0(%r12)
+	.byte 0x49;.byte 0x83;.byte 0xbc;.byte 0x24;.byte 0xe0;.byte 0x01;.byte 0x00;.byte 0x00;.byte 0x00;
+// 0xffffff80004886b1 <bsd_ast+390>:	jne    0xffffff80004886c4 <bsd_ast+409>
+	.byte 0x75;.byte 0x11;
+// 0xffffff80004886b3 <bsd_ast+392>:	mov    0x1e8(%r12),%r10d
+	.byte 0x45;.byte 0x8b;.byte 0x94;.byte 0x24;.byte 0xe8;.byte 0x01;.byte 0x00;.byte 0x00;
+// 0xffffff80004886bb <bsd_ast+400>:	test   %r10d,%r10d
+	.byte 0x45;.byte 0x85;.byte 0xd2;
+// 0xffffff80004886be <bsd_ast+403>:	je     0xffffff8000488783 <bsd_ast+600>
+	.byte 0x0f;.byte 0x84;.byte 0xbf;.byte 0x00;.byte 0x00;.byte 0x00;
+// 0xffffff80004886c4 <bsd_ast+409>:	lea    -0x28(%rbp),%rdx
+	.byte 0x48;.byte 0x8d;.byte 0x55;.byte 0xd8;
+// 0xffffff80004886c8 <bsd_ast+413>:	mov    0x18(%r12),%rdi
+	.byte 0x49;.byte 0x8b;.byte 0x7c;.byte 0x24;.byte 0x18;
+// 0xffffff80004886cd <bsd_ast+418>:	mov    $0x4,%esi
+	.byte 0xbe;.byte 0x04;.byte 0x00;.byte 0x00;.byte 0x00;
+// 0xffffff80004886d2 <bsd_ast+423>:	callq  0xffffff80002835c6 <task_vtimer_update>
+	.byte 0xe8;.byte 0xef;.byte 0xae;.byte 0xdf;.byte 0xff;
+// 0xffffff80004886d7 <bsd_ast+428>:	mov    %r12,%rdi
+	.byte 0x4c;.byte 0x89;.byte 0xe7;
+// 0xffffff80004886da <bsd_ast+431>:	callq  0xffffff800024b11e <proc_spinlock>
+	.byte 0xe8;.byte 0x3f;.byte 0x2a;.byte 0xdc;.byte 0xff;
+// 0xffffff80004886df <bsd_ast+436>:	mov    0x1e0(%r12),%rdx
+	.byte 0x49;.byte 0x8b;.byte 0x94;.byte 0x24;.byte 0xe0;.byte 0x01;.byte 0x00;.byte 0x00;
+// 0xffffff80004886e7 <bsd_ast+444>:	test   %rdx,%rdx
+	.byte 0x48;.byte 0x85;.byte 0xd2;
+// 0xffffff80004886ea <bsd_ast+447>:	jg     0xffffff80004886fb <bsd_ast+464>
+	.byte 0x7f;.byte 0x0f;
+// 0xffffff80004886ec <bsd_ast+449>:	mov    0x1e8(%r12),%eax
+	.byte 0x41;.byte 0x8b;.byte 0x84;.byte 0x24;.byte 0xe8;.byte 0x01;.byte 0x00;.byte 0x00;
+// 0xffffff80004886f4 <bsd_ast+457>:	cmp    -0x28(%rbp),%eax
+	.byte 0x3b;.byte 0x45;.byte 0xd8;
+// 0xffffff80004886f7 <bsd_ast+460>:	jg     0xffffff8000488703 <bsd_ast+472>
+	.byte 0x7f;.byte 0x0a;
+// 0xffffff80004886f9 <bsd_ast+462>:	jmp    0xffffff8000488740 <bsd_ast+533>
+	.byte 0xeb;.byte 0x45;
+// 0xffffff80004886fb <bsd_ast+464>:	mov    0x1e8(%r12),%eax
+	.byte 0x41;.byte 0x8b;.byte 0x84;.byte 0x24;.byte 0xe8;.byte 0x01;.byte 0x00;.byte 0x00;
+// 0xffffff8000488703 <bsd_ast+472>:	mov    %rdx,0x1e0(%r12)
+	.byte 0x49;.byte 0x89;.byte 0x94;.byte 0x24;.byte 0xe0;.byte 0x01;.byte 0x00;.byte 0x00;
+// 0xffffff800048870b <bsd_ast+480>:	sub    -0x28(%rbp),%eax
+	.byte 0x2b;.byte 0x45;.byte 0xd8;
+// 0xffffff800048870e <bsd_ast+483>:	mov    %eax,0x1e8(%r12)
+	.byte 0x41;.byte 0x89;.byte 0x84;.byte 0x24;.byte 0xe8;.byte 0x01;.byte 0x00;.byte 0x00;
+// 0xffffff8000488716 <bsd_ast+491>:	test   %eax,%eax
+	.byte 0x85;.byte 0xc0;
+// 0xffffff8000488718 <bsd_ast+493>:	jns    0xffffff800048872e <bsd_ast+515>
+	.byte 0x79;.byte 0x14;
+// 0xffffff800048871a <bsd_ast+495>:	decq   0x1e0(%r12)
+	.byte 0x49;.byte 0xff;.byte 0x8c;.byte 0x24;.byte 0xe0;.byte 0x01;.byte 0x00;.byte 0x00;
+// 0xffffff8000488722 <bsd_ast+503>:	addl   $0xf4240,0x1e8(%r12)
+	.byte 0x41;.byte 0x81;.byte 0x84;.byte 0x24;.byte 0xe8;.byte 0x01;.byte 0x00;.byte 0x00;.byte 0x40;.byte 0x42;.byte 0x0f;.byte 0x00;
+// 0xffffff800048872e <bsd_ast+515>:	movq   $0x0,-0x30(%rbp)
+	.byte 0x48;.byte 0xc7;.byte 0x45;.byte 0xd0;.byte 0x00;.byte 0x00;.byte 0x00;.byte 0x00;
+// 0xffffff8000488736 <bsd_ast+523>:	mov    %r12,%rdi
+	.byte 0x4c;.byte 0x89;.byte 0xe7;
+// 0xffffff8000488739 <bsd_ast+526>:	callq  0xffffff800024b10d <proc_spinunlock>
+	.byte 0xe8;.byte 0xcf;.byte 0x29;.byte 0xdc;.byte 0xff;
+// 0xffffff800048873e <bsd_ast+531>:	jmp    0xffffff8000488783 <bsd_ast+600>
+	.byte 0xeb;.byte 0x43;
+// 0xffffff8000488740 <bsd_ast+533>:	movl   $0x0,0x1e8(%r12)
+	.byte 0x41;.byte 0xc7;.byte 0x84;.byte 0x24;.byte 0xe8;.byte 0x01;.byte 0x00;.byte 0x00;.byte 0x00;.byte 0x00;.byte 0x00;.byte 0x00;
+// 0xffffff800048874c <bsd_ast+545>:	movq   $0x0,0x1e0(%r12)
+	.byte 0x49;.byte 0xc7;.byte 0x84;.byte 0x24;.byte 0xe0;.byte 0x01;.byte 0x00;.byte 0x00;.byte 0x00;.byte 0x00;.byte 0x00;.byte 0x00;
+// 0xffffff8000488758 <bsd_ast+557>:	mov    %r12,%rdi
+	.byte 0x4c;.byte 0x89;.byte 0xe7;
+// 0xffffff800048875b <bsd_ast+560>:	callq  0xffffff800024b10d <proc_spinunlock>
+	.byte 0xe8;.byte 0xad;.byte 0x29;.byte 0xdc;.byte 0xff;
+// 0xffffff8000488760 <bsd_ast+565>:	mov    0x18(%r12),%rdi
+	.byte 0x49;.byte 0x8b;.byte 0x7c;.byte 0x24;.byte 0x18;
+// 0xffffff8000488765 <bsd_ast+570>:	mov    $0x4,%esi
+	.byte 0xbe;.byte 0x04;.byte 0x00;.byte 0x00;.byte 0x00;
+// 0xffffff800048876a <bsd_ast+575>:	callq  0xffffff800028267d <task_vtimer_clear>
+	call _task_vtimer_clear
+// 0xffffff800048876f <bsd_ast+580>:	mov    $0x18,%r8d
+	.byte 0x41;.byte 0xb8;.byte 0x18;.byte 0x00;.byte 0x00;.byte 0x00;
+// 0xffffff8000488775 <bsd_ast+586>:	xor    %ecx,%ecx
+	.byte 0x31;.byte 0xc9;
+// 0xffffff8000488777 <bsd_ast+588>:	xor    %edx,%edx
+	.byte 0x31;.byte 0xd2;
+// 0xffffff8000488779 <bsd_ast+590>:	xor    %esi,%esi
+	.byte 0x31;.byte 0xf6;
+// 0xffffff800048877b <bsd_ast+592>:	mov    %r12,%rdi
+	.byte 0x4c;.byte 0x89;.byte 0xe7;
+// 0xffffff800048877e <bsd_ast+595>:	callq  0xffffff800024d36f <threadsignal+244>
+	call _psignal_internal
+// 0xffffff8000488783 <bsd_ast+600>:	movzbl 0x25d(%rbx),%eax
+	.byte 0x0f;.byte 0xb6;.byte 0x83;.byte 0x5d;.byte 0x02;.byte 0x00;.byte 0x00;
+// 0xffffff800048878a <bsd_ast+607>:	test   %al,%al
+	.byte 0x84;.byte 0xc0;
+// 0xffffff800048878c <bsd_ast+609>:	je     0xffffff80004887a7 <bsd_ast+636>
+	.byte 0x74;.byte 0x19;
+// 0xffffff800048878e <bsd_ast+611>:	movb   $0x0,0x25d(%rbx)
+	.byte 0xc6;.byte 0x83;.byte 0x5d;.byte 0x02;.byte 0x00;.byte 0x00;.byte 0x00;
+// 0xffffff8000488795 <bsd_ast+618>:	movzbl %al,%r8d
+	.byte 0x44;.byte 0x0f;.byte 0xb6;.byte 0xc0;
+// 0xffffff8000488799 <bsd_ast+622>:	xor    %ecx,%ecx
+	.byte 0x31;.byte 0xc9;
+// 0xffffff800048879b <bsd_ast+624>:	xor    %edx,%edx
+	.byte 0x31;.byte 0xd2;
+// 0xffffff800048879d <bsd_ast+626>:	xor    %esi,%esi
+	.byte 0x31;.byte 0xf6;
+// 0xffffff800048879f <bsd_ast+628>:	mov    %r12,%rdi
+	.byte 0x4c;.byte 0x89;.byte 0xe7;
+// 0xffffff80004887a2 <bsd_ast+631>:	callq  0xffffff800024d36f <threadsignal+244>
+	.byte 0xe8;.byte 0xc8;.byte 0x4b;.byte 0xdc;.byte 0xff;
+// 0xffffff80004887a7 <bsd_ast+636>:	cmpb   $0x0,0x25c(%rbx)
+	.byte 0x80;.byte 0xbb;.byte 0x5c;.byte 0x02;.byte 0x00;.byte 0x00;.byte 0x00;
+// 0xffffff80004887ae <bsd_ast+643>:	je     0xffffff80004887cb <bsd_ast+672>
+	.byte 0x74;.byte 0x1b;
+// 0xffffff80004887b0 <bsd_ast+645>:	movb   $0x0,0x25c(%rbx)
+	.byte 0xc6;.byte 0x83;.byte 0x5c;.byte 0x02;.byte 0x00;.byte 0x00;.byte 0x00;
+// 0xffffff80004887b7 <bsd_ast+652>:	mov    $0x11,%r8d
+	.byte 0x41;.byte 0xb8;.byte 0x11;.byte 0x00;.byte 0x00;.byte 0x00;
+// 0xffffff80004887bd <bsd_ast+658>:	xor    %ecx,%ecx
+	.byte 0x31;.byte 0xc9;
+// 0xffffff80004887bf <bsd_ast+660>:	xor    %edx,%edx
+	.byte 0x31;.byte 0xd2;
+// 0xffffff80004887c1 <bsd_ast+662>:	xor    %esi,%esi
+	.byte 0x31;.byte 0xf6;
+// 0xffffff80004887c3 <bsd_ast+664>:	mov    %r12,%rdi
+	.byte 0x4c;.byte 0x89;.byte 0xe7;
+// 0xffffff80004887c6 <bsd_ast+667>:	callq  0xffffff800024d36f <threadsignal+244>
+	call _psignal_internal
+// 0xffffff80004887cb <bsd_ast+672>:	callq  0xffffff800022b899 <current_thread>
+	.byte 0xe8;.byte 0xc9;.byte 0x30;.byte 0xda;.byte 0xff;
+// 0xffffff80004887d0 <bsd_ast+677>:	mov    %rax,%rdi
+	.byte 0x48;.byte 0x89;.byte 0xc7;
+// 0xffffff80004887d3 <bsd_ast+680>:	callq  0xffffff8000283eb6 <thread_should_halt>
+	.byte 0xe8;.byte 0xde;.byte 0xb6;.byte 0xdf;.byte 0xff;
+// 0xffffff80004887d8 <bsd_ast+685>:	test   %eax,%eax
+	.byte 0x85;.byte 0xc0;
+// 0xffffff80004887da <bsd_ast+687>:	jne    0xffffff8000488820 <bsd_ast+757>
+	.byte 0x75;.byte 0x44;
+// 0xffffff80004887dc <bsd_ast+689>:	mov    0x148(%rbx),%ecx
+	.byte 0x8b;.byte 0x8b;.byte 0x48;.byte 0x01;.byte 0x00;.byte 0x00;
+// 0xffffff80004887e2 <bsd_ast+695>:	mov    0x150(%rbx),%eax
+	.byte 0x8b;.byte 0x83;.byte 0x50;.byte 0x01;.byte 0x00;.byte 0x00;
+// 0xffffff80004887e8 <bsd_ast+701>:	xor    %edx,%edx
+	.byte 0x31;.byte 0xd2;
+// 0xffffff80004887ea <bsd_ast+703>:	testb  $0x4,0x14d(%r12)
+	.byte 0x41;.byte 0xf6;.byte 0x84;.byte 0x24;.byte 0x4d;.byte 0x01;.byte 0x00;.byte 0x00;.byte 0x04;
+// 0xffffff80004887f3 <bsd_ast+712>:	jne    0xffffff80004887fd <bsd_ast+722>
+	.byte 0x75;.byte 0x08;
+// 0xffffff80004887f5 <bsd_ast+714>:	mov    0x2ac(%r12),%edx
+	.byte 0x41;.byte 0x8b;.byte 0x94;.byte 0x24;.byte 0xac;.byte 0x02;.byte 0x00;.byte 0x00;
+// 0xffffff80004887fd <bsd_ast+722>:	or     %eax,%edx
+	.byte 0x09;.byte 0xc2;
+// 0xffffff80004887ff <bsd_ast+724>:	and    $0xfffefeff,%edx
+	.byte 0x81;.byte 0xe2;.byte 0xff;.byte 0xfe;.byte 0xfe;.byte 0xff;
+// 0xffffff8000488805 <bsd_ast+730>:	not    %edx
+	.byte 0xf7;.byte 0xd2;
+// 0xffffff8000488807 <bsd_ast+732>:	test   %edx,%ecx
+	.byte 0x85;.byte 0xd1;
+// 0xffffff8000488809 <bsd_ast+734>:	je     0xffffff8000488820 <bsd_ast+757>
+	.byte 0x74;.byte 0x15;
+// 0xffffff800048880b <bsd_ast+736>:	jmp    0xffffff8000488814 <bsd_ast+745>
+	.byte 0xeb;.byte 0x07;
+// 0xffffff800048880d <bsd_ast+738>:	mov    %eax,%edi
+	.byte 0x89;.byte 0xc7;
+// 0xffffff800048880f <bsd_ast+740>:	callq  0xffffff800048661e <postsig>
+	.byte 0xe8;.byte 0x0a;.byte 0xde;.byte 0xff;.byte 0xff;
+// 0xffffff8000488814 <bsd_ast+745>:	mov    %r12,%rdi
+	.byte 0x4c;.byte 0x89;.byte 0xe7;
+// 0xffffff8000488817 <bsd_ast+748>:	callq  0xffffff8000487f9f <issignal>
+	.byte 0xe8;.byte 0x83;.byte 0xf7;.byte 0xff;.byte 0xff;
+// 0xffffff800048881c <bsd_ast+753>:	test   %eax,%eax
+	.byte 0x85;.byte 0xc0;
+// 0xffffff800048881e <bsd_ast+755>:	jne    0xffffff800048880d <bsd_ast+738>
+	.byte 0x75;.byte 0xed;
+// 0xffffff8000488820 <bsd_ast+757>:	mov    0x438b41(%rip),%r9d        # 0xffffff80008c1368
+	.byte 0x44;.byte 0x8b;.byte 0x0d;.byte 0x41;.byte 0x8b;.byte 0x43;.byte 0x00;
+// 0xffffff8000488827 <bsd_ast+764>:	test   %r9d,%r9d
+	.byte 0x45;.byte 0x85;.byte 0xc9;
+// 0xffffff800048882a <bsd_ast+767>:	jne    0xffffff800048883b <bsd_ast+784>
+	.byte 0x75;.byte 0x0f;
+// 0xffffff800048882c <bsd_ast+769>:	movl   $0x1,0x438b32(%rip)        # 0xffffff80008c1368
+	.byte 0xc7;.byte 0x05;.byte 0x32;.byte 0x8b;.byte 0x43;.byte 0x00;.byte 0x01;.byte 0x00;.byte 0x00;.byte 0x00;
+// 0xffffff8000488836 <bsd_ast+779>:	callq  0xffffff800046af45 <bsdinit_task>
+	call _psignal_internal
+// 0xffffff800048883b <bsd_ast+784>:	add    $0x20,%rsp
+	.byte 0x48;.byte 0x83;.byte 0xc4;.byte 0x20;
+// 0xffffff800048883f <bsd_ast+788>:	pop    %rbx
+	.byte 0x5b;
+// 0xffffff8000488840 <bsd_ast+789>:	pop    %r12
+	.byte 0x41;.byte 0x5c;
+// 0xffffff8000488842 <bsd_ast+791>:	leaveq 
+	.byte 0xc9;
+// 0xffffff8000488843 <bsd_ast+792>:	retq   
+	.byte 0xc3;
+
+.globl _main
+_main:
+	ret
+
+.globl _psignal_internal
+_psignal_internal:
+	ret
+
+.globl _task_vtimer_clear
+_task_vtimer_clear:
+	ret
+
+.globl _task_vtimer_set
+_task_vtimer_set:
+	ret
