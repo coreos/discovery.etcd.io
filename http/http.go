@@ -6,7 +6,7 @@ import (
 
 	gorillaHandlers "github.com/gorilla/handlers"
 
-	"github.com/coreos/discovery/handlers"
+	"github.com/coreos/etcd-discovery/handlers"
 	"github.com/gorilla/mux"
 
 )

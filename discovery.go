@@ -8,7 +8,7 @@ import (
 	"github.com/coreos/go-systemd/activation"
 	"github.com/gorilla/mux"
 
-	_ "github.com/coreos/discovery/http"
+	_ "github.com/coreos/etcd-discovery/http"
 )
 
 var addr = flag.String("addr", "", "web service address")
