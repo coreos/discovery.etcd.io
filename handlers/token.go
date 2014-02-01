@@ -7,29 +7,12 @@ import (
 	"net/http"
 	"net/url"
 	"path"
-	"sync"
+
+	"github.com/coreos/discovery/pkg/lockstring"
 )
 
-type LockString struct {
-	sync.RWMutex
-	str string
-}
-
-func (r *LockString) String() string {
-	r.RLock()
-	str := r.str
-	r.RUnlock()
-	return str
-}
-
-func (r *LockString) Set(str string) {
-	r.Lock()
-	r.str = str
-	r.Unlock()
-}
-
 var (
-	currentLeader LockString
+	currentLeader lockstring.LockString
 )
 
 func init() {
