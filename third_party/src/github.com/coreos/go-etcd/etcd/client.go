@@ -161,6 +161,7 @@ func (c *Client) initHTTPClient() {
 		TLSClientConfig: &tls.Config{
 			InsecureSkipVerify: true,
 		},
+		DisableKeepAlives: true,
 	}
 	c.httpClient = &http.Client{Transport: tr}
 }
