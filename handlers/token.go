@@ -1,8 +1,10 @@
 package handlers
 
 import (
+	"bytes"
 	"errors"
 	"io"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"net/url"
@@ -20,21 +22,26 @@ func init() {
 }
 
 func proxyRequest(r *http.Request) (*http.Response, error) {
+	body, _ := ioutil.ReadAll(r.Body)
+
 	for i := 0; i <= 10; i++ {
 		u := url.URL{
-			Host: currentLeader.String(),
 			Scheme: "http",
+			Host: currentLeader.String(),
 			Path: path.Join("v2", "keys", "_etcd", "registry", r.URL.Path),
 			RawQuery: r.URL.RawQuery,
 		}
 
-		req, err := http.NewRequest(r.Method, u.String(), r.Body)
+		buf := bytes.NewBuffer(body)
+		outreq, err := http.NewRequest(r.Method, u.String(), buf)
 		if err != nil {
 			return nil, err
 		}
 
+		copyHeader(outreq.Header, r.Header)
+
 		client := http.Client{}
-		resp, err := client.Do(req)
+		resp, err := client.Do(outreq)
 		if err != nil {
 			return nil, err
 		}
@@ -55,6 +62,15 @@ func proxyRequest(r *http.Request) (*http.Response, error) {
 	return nil, errors.New("All attempts at proxying to etcd failed")
 }
 
+// copyHeader copies all of the headers from dst to src.
+func copyHeader(dst, src http.Header) {
+	for k, v := range src {
+		for _, q := range v {
+			dst.Add(k, q)
+		}
+	}
+}
+
 func TokenHandler(w http.ResponseWriter, r *http.Request) {
 	resp, err := proxyRequest(r)
 	if err != nil {
@@ -62,13 +78,7 @@ func TokenHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "", 500)
 	}
 
-	// Copy all of the headers, set the status code and copy the body
-	for k, v := range resp.Header {
-		for _, q := range v {
-			w.Header().Add(k, q)
-		}
-	}
+	copyHeader(w.Header(), resp.Header)
 	w.WriteHeader(resp.StatusCode)
-
 	io.Copy(w, resp.Body)
 }
