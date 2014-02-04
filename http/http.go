@@ -19,6 +19,8 @@ func init() {
 	r.HandleFunc("/health", handlers.HealthHandler)
 
 	// Only allow exact tokens with GETs and PUTs
+	r.HandleFunc("/{token:[a-f0-9]{32}}", handlers.TokenHandler).
+		Methods("GET", "PUT")
 	r.HandleFunc("/{token:[a-f0-9]{32}}/", handlers.TokenHandler).
 		Methods("GET", "PUT")
 	r.HandleFunc("/{token:[a-f0-9]{32}}/{machine}", handlers.TokenHandler).
