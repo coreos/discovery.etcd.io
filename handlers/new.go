@@ -28,10 +28,11 @@ func setupToken() (string, error) {
 	}
 
 	client := etcd.NewClient(nil)
-	resp, err := client.Set(path.Join("_etcd", "registry", token, "_state"), "init", 0)
+	key := path.Join("_etcd", "registry", token)
+	resp, err := client.CreateDir(key, 0)
 
-	if err != nil || resp.Node == nil || resp.Node.Value != "init" {
-		return "", errors.New(fmt.Sprintf("Couldn't setup state %v", err))
+	if err != nil || resp.Node == nil || resp.Node.Key != "/"+key || resp.Node.Dir != true {
+		return "", errors.New(fmt.Sprintf("Couldn't setup state %v %v", resp.Node.Dir, err))
 	}
 
 	return token, nil
