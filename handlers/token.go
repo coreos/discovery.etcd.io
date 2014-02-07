@@ -47,7 +47,8 @@ func proxyRequest(r *http.Request) (*http.Response, error) {
 		}
 
 		// Try again on the next host
-		if resp.StatusCode == 307 && r.Method == "PUT" {
+		if resp.StatusCode == 307 &&
+			(r.Method == "PUT" || r.Method == "DELETE") {
 			u, err := resp.Location()
 			if err != nil {
 				return nil, err
