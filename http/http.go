@@ -24,9 +24,7 @@ func init() {
 	r.HandleFunc("/{token:[a-f0-9]{32}}/", handlers.TokenHandler).
 		Methods("GET", "PUT")
 	r.HandleFunc("/{token:[a-f0-9]{32}}/{machine}", handlers.TokenHandler).
-		Methods("GET", "PUT")
-	r.HandleFunc("/{token:[a-f0-9]{32}}/_state", handlers.TokenHandler).
-		Methods("DELETE")
+		Methods("GET", "PUT", "DELETE")
 
 	logH := gorillaHandlers.LoggingHandler(os.Stdout, r)
 
