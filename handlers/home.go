@@ -1,10 +1,13 @@
 package handlers
 
 import (
-	"fmt"
 	"net/http"
 )
 
 func HomeHandler(w http.ResponseWriter, r *http.Request) {
-    fmt.Fprintf(w, "discovery.etcd.io")
+
+	http.Redirect(w, r,
+		"https://coreos.com/docs/cluster-management/setup/etcd-cluster-discovery/",
+		http.StatusTemporaryRedirect,
+	)
 }
