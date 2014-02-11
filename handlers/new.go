@@ -32,7 +32,7 @@ func setupToken() (string, error) {
 	resp, err := client.CreateDir(key, 0)
 
 	if err != nil || resp.Node == nil || resp.Node.Key != "/"+key || resp.Node.Dir != true {
-		return "", errors.New(fmt.Sprintf("Couldn't setup state %v %v", resp.Node.Dir, err))
+		return "", errors.New(fmt.Sprintf("Couldn't setup state %v %v", resp, err))
 	}
 
 	return token, nil
