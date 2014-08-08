@@ -7,7 +7,7 @@ import (
 
 	"github.com/coreos/go-systemd/activation"
 
-	_ "github.com/coreos/etcd-discovery/http"
+	_ "github.com/coreos/discovery.etcd.io/http"
 )
 
 var addr = flag.String("addr", "", "web service address")
