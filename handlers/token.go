@@ -10,7 +10,7 @@ import (
 	"net/url"
 	"path"
 
-	"github.com/coreos/etcd-discovery/pkg/lockstring"
+	"github.com/coreos/discovery.etcd.io/pkg/lockstring"
 )
 
 var (

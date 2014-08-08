@@ -4,7 +4,7 @@ import (
 	"log"
 
 	"code.google.com/p/rsc/devweb/slave"
-	_ "github.com/coreos/etcd-discovery/http"
+	_ "github.com/coreos/discovery.etcd.io/http"
 )
 
 func main() {
