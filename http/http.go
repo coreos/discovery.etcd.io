@@ -8,7 +8,6 @@ import (
 
 	"github.com/coreos/discovery.etcd.io/handlers"
 	"github.com/gorilla/mux"
-
 )
 
 func init() {
@@ -25,6 +24,8 @@ func init() {
 		Methods("GET", "PUT")
 	r.HandleFunc("/{token:[a-f0-9]{32}}/{machine}", handlers.TokenHandler).
 		Methods("GET", "PUT", "DELETE")
+	r.HandleFunc("/{token:[a-f0-9]{32}}/_config/size", handlers.TokenHandler).
+		Methods("GET")
 
 	logH := gorillaHandlers.LoggingHandler(os.Stdout, r)
 

@@ -7,7 +7,7 @@ import (
 )
 
 func HealthHandler(w http.ResponseWriter, r *http.Request) {
-	token, err := setupToken()
+	token, err := setupToken(0)
 
 	if err != nil || token == "" {
 		log.Printf("health failed to setupToken %v", err)
