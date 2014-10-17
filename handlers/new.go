@@ -7,6 +7,8 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
+	"strings"
 	"path"
 	"strconv"
 
@@ -29,7 +31,14 @@ func setupToken(size int) (string, error) {
 		return "", errors.New("Couldn't generate a token")
 	}
 
-	client := etcd.NewClient(nil)
+	machines := make([]string, 0)
+
+	origin_addr := os.Getenv("DISCOVERY_ORIGIN_ADDR")
+	if origin_addr != "" {
+		machines = append(machines, origin_addr)
+	}
+	client := etcd.NewClient(machines)
+
 	key := path.Join("_etcd", "registry", token)
 	resp, err := client.CreateDir(key, 0)
 
@@ -78,5 +87,9 @@ func NewTokenHandler(w http.ResponseWriter, r *http.Request) {
 
 	log.Println("New cluster created", token)
 
-	fmt.Fprintf(w, "https://discovery.etcd.io/"+token)
+	var domain = os.Getenv("DISCOVERY_ROOT_URL")
+	if domain == "" {
+		domain = "https://discovery.etcd.io"
+	}
+	fmt.Fprintf(w, strings.Trim(domain, "/")+"/"+token)
 }
