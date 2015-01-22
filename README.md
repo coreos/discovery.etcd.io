@@ -5,6 +5,14 @@ This code powers the public service at https://discovery.etcd.io. The API is doc
 https://github.com/coreos/etcd/tree/master/Documentation/cluster-discovery.md
 https://github.com/coreos/etcd/tree/master/Documentation/discovery-protocol.md
 
+## Docker
+You may run the service in a docker container:
+
+```
+docker pull coreos/discovery.etcd.io
+docker run -d -p 80:8087 coreos/discovery.etcd.io
+```
+
 ## Development
 
 discovery.etcd.io uses devweb for easy development. It is simple to get started:
