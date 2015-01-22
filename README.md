@@ -11,7 +11,9 @@ You may run the service in a docker container:
 
 ```
 docker pull quay.io/coreos/discovery.etcd.io
-docker run -d -p 80:8087 quay.io/coreos/discovery.etcd.io
+docker run -d -p 80:8087 \
+  -e ROOT_URL=https://discovery.etcd.io \
+  quay.io/coreos/discovery.etcd.io
 ```
 
 ## Development
