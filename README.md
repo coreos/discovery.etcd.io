@@ -1,9 +1,9 @@
 # discovery.etcd.io
 
-This code powers the public service at https://discovery.etcd.io. The API is documented in
+This code powers the public service at https://discovery.etcd.io. The API is
+documented in the etcd clustering documentation:
 
-https://github.com/coreos/etcd/tree/master/Documentation/cluster-discovery.md
-https://github.com/coreos/etcd/tree/master/Documentation/discovery-protocol.md
+https://github.com/coreos/etcd/blob/master/Documentation/clustering.md#public-etcd-discovery-service
 
 ## Development
 
