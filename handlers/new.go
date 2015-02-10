@@ -78,5 +78,5 @@ func NewTokenHandler(w http.ResponseWriter, r *http.Request) {
 
 	log.Println("New cluster created", token)
 
-	fmt.Fprintf(w, "https://discovery.etcd.io/"+token)
+	fmt.Fprintf(w, token)
 }
