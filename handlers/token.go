@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"net/url"
+	"os"
 	"path"
 
 	"github.com/coreos/discovery.etcd.io/pkg/lockstring"
@@ -18,7 +19,14 @@ var (
 )
 
 func init() {
-	currentLeader.Set("127.0.0.1:4001")
+
+	init_leader := os.Getenv("DISCOVERY_INIT_LEADER")
+
+	if init_leader == "" {
+		currentLeader.Set("127.0.0.1")
+	} else {
+		currentLeader.Set(init_leader)
+	}
 }
 
 func proxyRequest(r *http.Request) (*http.Response, error) {
@@ -26,9 +34,9 @@ func proxyRequest(r *http.Request) (*http.Response, error) {
 
 	for i := 0; i <= 10; i++ {
 		u := url.URL{
-			Scheme: "http",
-			Host: currentLeader.String(),
-			Path: path.Join("v2", "keys", "_etcd", "registry", r.URL.Path),
+			Scheme:   "http",
+			Host:     currentLeader.String(),
+			Path:     path.Join("v2", "keys", "_etcd", "registry", r.URL.Path),
 			RawQuery: r.URL.RawQuery,
 		}
 
