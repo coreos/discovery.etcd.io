@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"os"
 	"crypto/rand"
 	"encoding/hex"
 	"errors"
@@ -78,5 +79,9 @@ func NewTokenHandler(w http.ResponseWriter, r *http.Request) {
 
 	log.Println("New cluster created", token)
 
-	fmt.Fprintf(w, "https://discovery.etcd.io/"+token)
+	var base_url = os.Getenv("DISCOVERY_BASE_URL")
+	if base_url == "" {
+		base_url = "https://discovery.etcd.io/"
+	}
+	fmt.Fprintf(w, base_url+token)
 }
