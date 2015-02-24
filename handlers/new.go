@@ -7,6 +7,8 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"net/url"
+	"os"
 	"path"
 	"strconv"
 
@@ -57,6 +59,31 @@ func deleteToken(token string) error {
 	return err
 }
 
+func getRootUrl() (*url.URL, error) {
+	var root_url = os.Getenv("ROOT_URL")
+	if root_url == "" {
+		root_url = "https://discovery.etcd.io"
+	}
+
+	u, err := url.Parse(root_url)
+	if len(u.Path) > 1 || ( len(u.Path) == 1 && u.Path != "/" ) {
+		return u, errors.New(
+			fmt.Sprintf("Expected URL without path (%v)", u.Path))
+	}
+
+	if u.RawQuery != "" {
+		return u, errors.New(
+			fmt.Sprintf("Expected URL without query (%v)", u.RawQuery))
+	}
+
+	if u.Fragment != "" {
+		return u, errors.New(
+			fmt.Sprintf("Expected URL without fragment (%v)", u.Fragment))
+	}
+
+	return u, err
+}
+
 func NewTokenHandler(w http.ResponseWriter, r *http.Request) {
 	var err error
 	size := 3
@@ -78,5 +105,14 @@ func NewTokenHandler(w http.ResponseWriter, r *http.Request) {
 
 	log.Println("New cluster created", token)
 
-	fmt.Fprintf(w, "https://discovery.etcd.io/"+token)
+	u, err := getRootUrl()
+	if err != nil {
+		log.Printf("getRootUrl returned: %v", err)
+		http.Error(w, "Unable to generate URL with given token", 400)
+		return
+	}
+
+	u.Path = token
+
+	fmt.Fprintf(w, u.String())
 }
