@@ -16,6 +16,7 @@ func init() {
 	r.HandleFunc("/", handlers.HomeHandler)
 	r.HandleFunc("/new", handlers.NewTokenHandler)
 	r.HandleFunc("/health", handlers.HealthHandler)
+	r.HandleFunc("/robots.txt", handlers.RobotsHandler)
 
 	// Only allow exact tokens with GETs and PUTs
 	r.HandleFunc("/{token:[a-f0-9]{32}}", handlers.TokenHandler).
