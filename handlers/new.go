@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"bytes"
 	"crypto/rand"
 	"encoding/hex"
 	"errors"
@@ -81,5 +82,5 @@ func NewTokenHandler(w http.ResponseWriter, r *http.Request) {
 
 	log.Println("New cluster created", token)
 
-	fmt.Fprintf(w, "%s/%s", *baseURI, token)
+	fmt.Fprintf(w, "%s/%s", bytes.TrimRight([]byte(*baseURI), "/"), token)
 }
