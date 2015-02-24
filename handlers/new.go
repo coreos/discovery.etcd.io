@@ -9,9 +9,18 @@ import (
 	"net/http"
 	"path"
 	"strconv"
-
+	"os"
 	"github.com/coreos/go-etcd/etcd"
 )
+
+func getDomain() string {
+	domain := os.Getenv("ETCD_DISCOVERY_DOMAIN")
+	if domain != "" { 
+		return domain
+	}
+
+	return "https://discovery.etcd.io/"
+}
 
 func generateCluster() string {
 	b := make([]byte, 16)
@@ -78,5 +87,7 @@ func NewTokenHandler(w http.ResponseWriter, r *http.Request) {
 
 	log.Println("New cluster created", token)
 
-	fmt.Fprintf(w, "https://discovery.etcd.io/"+token)
+	domain := getDomain()
+
+	fmt.Fprintf(w, domain+"/"+token)
 }
