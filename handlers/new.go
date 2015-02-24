@@ -4,6 +4,7 @@ import (
 	"crypto/rand"
 	"encoding/hex"
 	"errors"
+	"flag"
 	"fmt"
 	"log"
 	"net/http"
@@ -12,6 +13,8 @@ import (
 
 	"github.com/coreos/go-etcd/etcd"
 )
+
+var baseURI = flag.String("host", "https://discovery.etcd.io", "base location for computed token URI")
 
 func generateCluster() string {
 	b := make([]byte, 16)
@@ -78,5 +81,5 @@ func NewTokenHandler(w http.ResponseWriter, r *http.Request) {
 
 	log.Println("New cluster created", token)
 
-	fmt.Fprintf(w, "https://discovery.etcd.io/"+token)
+	fmt.Fprintf(w, "%s/%s", *baseURI, token)
 }
