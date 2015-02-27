@@ -1,7 +1,10 @@
-FROM golang:onbuild
+FROM scratch
+MAINTAINER "CoreOS, Inc"
 EXPOSE 8087
 
-ADD . /srv/discovery.etcd.io
-WORKDIR /srv/discovery.etcd.io
+# You need to build bin/discovery-linux64-static first; check build-static.
 
-CMD GOPATH="${PWD}/third_party" ./devweb -addr=":8087" github.com/coreos/discovery.etcd.io/discovery
+ADD bin/discovery-linux64-static /discovery
+
+CMD ["--addr=:8087"]
+ENTRYPOINT ["/discovery"]
