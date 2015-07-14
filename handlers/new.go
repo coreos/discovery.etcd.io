@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"bytes"
 	"crypto/rand"
 	"encoding/hex"
 	"errors"
@@ -9,13 +8,15 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"net/url"
+	"os"
 	"path"
 	"strconv"
 
 	"github.com/coreos/go-etcd/etcd"
 )
 
-var baseURI = flag.String("host", "https://discovery.etcd.io", "base location for computed token URI")
+var baseURI = flag.String("host", os.Getenv("DISCOVERY_HOST"), "base location for computed token URI")
 
 func generateCluster() string {
 	b := make([]byte, 16)
@@ -61,6 +62,34 @@ func deleteToken(token string) error {
 	return err
 }
 
+func getValidUrl(givenUrl, token string) (string, error) {
+	u, err := url.Parse(givenUrl)
+
+	if err != nil {
+		return "", errors.New(
+			fmt.Sprintf("Invalid URL given: %v", err))
+	}
+
+	if len(u.Path) > 1 || (len(u.Path) == 1 && u.Path != "/") {
+		return "", errors.New(
+			fmt.Sprintf("Expected URL without path (%v)", u.Path))
+	}
+
+	if u.RawQuery != "" {
+		return "", errors.New(
+			fmt.Sprintf("Expected URL without query (%v)", u.RawQuery))
+	}
+
+	if u.Fragment != "" {
+		return "", errors.New(
+			fmt.Sprintf("Expected URL without fragment (%v)", u.Fragment))
+	}
+
+	u.Path = token
+
+	return u.String(), err
+}
+
 func NewTokenHandler(w http.ResponseWriter, r *http.Request) {
 	var err error
 	size := 3
@@ -82,5 +111,16 @@ func NewTokenHandler(w http.ResponseWriter, r *http.Request) {
 
 	log.Println("New cluster created", token)
 
-	fmt.Fprintf(w, "%s/%s", bytes.TrimRight([]byte(*baseURI), "/"), token)
+	var host = string(*baseURI)
+	if host == "" {
+		host = "https://discovery.etcd.io"
+	}
+
+	validUrl, err := getValidUrl(host, token)
+	if err != nil {
+		log.Printf("URL validation failed: %v", err)
+		http.Error(w, "Unable to generate URL with given token", 400)
+	}
+
+	fmt.Fprintf(w, validUrl)
 }

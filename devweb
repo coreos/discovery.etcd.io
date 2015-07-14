@@ -1,4 +1,10 @@
 #!/bin/sh -e
+ARGS=$@
+
+if [ $# == 0 ]; then
+  ARGS="-addr=:8087"
+fi
 
 go run third_party.go install code.google.com/p/rsc/devweb
-GOPATH="${PWD}/third_party" PATH="${PATH}:${PWD}" ./bin/devweb -addr=":8087" github.com/coreos/discovery.etcd.io/dev
+./build
+GOPATH="${PWD}/third_party" PATH="${PATH}:${PWD}" ./bin/discovery.etcd.io $ARGS github.com/coreos/discovery.etcd.io/dev
