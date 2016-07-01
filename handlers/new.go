@@ -81,6 +81,7 @@ func NewTokenHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("New cluster created", token)
-
+	
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	fmt.Fprintf(w, "%s/%s", bytes.TrimRight([]byte(*baseURI), "/"), token)
 }
