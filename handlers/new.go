@@ -11,9 +11,18 @@ import (
 	"net/http"
 	"path"
 	"strconv"
+	"time"
 
-	"github.com/coreos/go-etcd/etcd"
+	"github.com/coreos/etcd/client"
+	"golang.org/x/net/context"
 )
+
+var cfg = client.Config{
+	Endpoints: []string{"http://127.0.0.1:2379"},
+	Transport: client.DefaultTransport,
+	// set timeout per request to fail fast when the target endpoint is unavailable
+	HeaderTimeoutPerRequest: time.Second,
+}
 
 var baseURI = flag.String("host", "https://discovery.etcd.io", "base location for computed token URI")
 
@@ -33,15 +42,12 @@ func setupToken(size int) (string, error) {
 		return "", errors.New("Couldn't generate a token")
 	}
 
-	client := etcd.NewClient(nil)
+	c, _ := client.New(cfg)
+	kapi := client.NewKeysAPI(c)
+
 	key := path.Join("_etcd", "registry", token)
-	resp, err := client.CreateDir(key, 0)
 
-	if err != nil || resp.Node == nil || resp.Node.Key != "/"+key || resp.Node.Dir != true {
-		return "", errors.New(fmt.Sprintf("Couldn't setup state %v %v", resp, err))
-	}
-
-	resp, err = client.Create(path.Join(key, "_config", "size"), strconv.Itoa(size), 0)
+	resp, err := kapi.Create(context.Background(), path.Join(key, "_config", "size"), strconv.Itoa(size))
 	if err != nil {
 		return "", errors.New(fmt.Sprintf("Couldn't setup state %v %v", resp, err))
 	}
@@ -50,13 +56,18 @@ func setupToken(size int) (string, error) {
 }
 
 func deleteToken(token string) error {
-	client := etcd.NewClient(nil)
+	c, _ := client.New(cfg)
+	kapi := client.NewKeysAPI(c)
 
 	if token == "" {
 		return errors.New("No token given")
 	}
 
-	_, err := client.Delete(path.Join("_etcd", "registry", token), true)
+	_, err := kapi.Delete(
+		context.Background(),
+		path.Join("_etcd", "registry", token),
+		&client.DeleteOptions{Recursive: true},
+	)
 
 	return err
 }

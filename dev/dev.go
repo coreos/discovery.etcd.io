@@ -3,8 +3,8 @@ package main
 import (
 	"log"
 
-	"code.google.com/p/rsc/devweb/slave"
 	_ "github.com/coreos/discovery.etcd.io/http"
+	"github.com/rsc/devweb/slave"
 )
 
 func main() {
