@@ -3,7 +3,7 @@
 This code powers the public service at https://discovery.etcd.io. The API is
 documented in the etcd clustering documentation:
 
-https://github.com/coreos/etcd/blob/master/Documentation/clustering.md#public-etcd-discovery-service
+https://github.com/coreos/etcd/blob/master/Documentation/dev-internal/discovery_protocol.md#public-discovery-service
 
 ## Docker Container
 
