@@ -7,6 +7,8 @@ import (
 	gorillaHandlers "github.com/gorilla/handlers"
 
 	"github.com/coreos/discovery.etcd.io/handlers"
+	"github.com/prometheus/client_golang/prometheus"
+
 	"github.com/gorilla/mux"
 )
 
@@ -31,4 +33,5 @@ func init() {
 	logH := gorillaHandlers.LoggingHandler(os.Stdout, r)
 
 	http.Handle("/", logH)
+	http.Handle("/metrics", prometheus.Handler())
 }
