@@ -5,7 +5,6 @@ import (
 	"crypto/rand"
 	"encoding/hex"
 	"errors"
-	"flag"
 	"fmt"
 	"log"
 	"net/http"
@@ -16,19 +15,12 @@ import (
 	"github.com/coreos/discovery.etcd.io/handlers/httperror"
 	"github.com/coreos/etcd/client"
 	"github.com/prometheus/client_golang/prometheus"
+	"github.com/spf13/viper"
 	"golang.org/x/net/context"
 )
 
-var cfg = client.Config{
-	Endpoints: []string{"http://127.0.0.1:2379"},
-	Transport: client.DefaultTransport,
-	// set timeout per request to fail fast when the target endpoint is unavailable
-	HeaderTimeoutPerRequest: time.Second,
-}
-
 var newCounter *prometheus.CounterVec
-
-var baseURI = flag.String("host", "https://discovery.etcd.io", "base location for computed token URI")
+var cfg *client.Config
 
 func init() {
 	newCounter = prometheus.NewCounterVec(
@@ -51,13 +43,22 @@ func generateCluster() string {
 	return hex.EncodeToString(b)
 }
 
+func Setup() {
+	cfg = &client.Config{
+		Endpoints: []string{viper.GetString("etcd")},
+		Transport: client.DefaultTransport,
+		// set timeout per request to fail fast when the target endpoint is unavailable
+		HeaderTimeoutPerRequest: time.Second,
+	}
+}
+
 func setupToken(size int) (string, error) {
 	token := generateCluster()
 	if token == "" {
 		return "", errors.New("Couldn't generate a token")
 	}
 
-	c, _ := client.New(cfg)
+	c, _ := client.New(*cfg)
 	kapi := client.NewKeysAPI(c)
 
 	key := path.Join("_etcd", "registry", token)
@@ -71,7 +72,7 @@ func setupToken(size int) (string, error) {
 }
 
 func deleteToken(token string) error {
-	c, _ := client.New(cfg)
+	c, _ := client.New(*cfg)
 	kapi := client.NewKeysAPI(c)
 
 	if token == "" {
@@ -108,6 +109,6 @@ func NewTokenHandler(w http.ResponseWriter, r *http.Request) {
 
 	log.Println("New cluster created", token)
 
-	fmt.Fprintf(w, "%s/%s", bytes.TrimRight([]byte(*baseURI), "/"), token)
+	fmt.Fprintf(w, "%s/%s", bytes.TrimRight([]byte(viper.GetString("host")), "/"), token)
 	newCounter.WithLabelValues("200", r.Method).Add(1)
 }

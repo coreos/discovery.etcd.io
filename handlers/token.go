@@ -14,6 +14,7 @@ import (
 	"github.com/coreos/discovery.etcd.io/handlers/httperror"
 	"github.com/coreos/discovery.etcd.io/pkg/lockstring"
 	"github.com/prometheus/client_golang/prometheus"
+	"github.com/spf13/viper"
 )
 
 func init() {
@@ -26,7 +27,7 @@ func init() {
 	)
 	prometheus.MustRegister(tokenCounter)
 
-	currentLeader.Set("127.0.0.1:4001")
+	currentLeader.Set(viper.GetString("etcd"))
 }
 
 var (

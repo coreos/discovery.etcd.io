@@ -12,7 +12,8 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func init() {
+func Setup() {
+	handlers.Setup()
 	r := mux.NewRouter()
 
 	r.HandleFunc("/", handlers.HomeHandler)

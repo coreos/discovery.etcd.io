@@ -20,3 +20,7 @@ import:
   - context
 - package: github.com/prometheus/client_golang
   version: ~0.8.0
+- package: github.com/spf13/pflag
+- package: github.com/spf13/viper
+- package: github.com/pelletier/go-toml
+  version: ~0.3.5
