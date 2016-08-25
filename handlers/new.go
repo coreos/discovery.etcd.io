@@ -13,7 +13,9 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/coreos/discovery.etcd.io/handlers/httperror"
 	"github.com/coreos/etcd/client"
+	"github.com/prometheus/client_golang/prometheus"
 	"golang.org/x/net/context"
 )
 
@@ -24,7 +26,20 @@ var cfg = client.Config{
 	HeaderTimeoutPerRequest: time.Second,
 }
 
+var newCounter *prometheus.CounterVec
+
 var baseURI = flag.String("host", "https://discovery.etcd.io", "base location for computed token URI")
+
+func init() {
+	newCounter = prometheus.NewCounterVec(
+		prometheus.CounterOpts{
+			Name: "endpoint_new_requests_total",
+			Help: "How many /new requests processed, partitioned by status code and HTTP method.",
+		},
+		[]string{"code", "method"},
+	)
+	prometheus.MustRegister(newCounter)
+}
 
 func generateCluster() string {
 	b := make([]byte, 16)
@@ -79,7 +94,7 @@ func NewTokenHandler(w http.ResponseWriter, r *http.Request) {
 	if s != "" {
 		size, err = strconv.Atoi(s)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
+			httperror.Error(w, r, err.Error(), http.StatusBadRequest, newCounter)
 			return
 		}
 	}
@@ -87,11 +102,12 @@ func NewTokenHandler(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		log.Printf("setupToken returned: %v", err)
-		http.Error(w, "Unable to generate token", 400)
+		httperror.Error(w, r, "Unable to generate token", 400, newCounter)
 		return
 	}
 
 	log.Println("New cluster created", token)
 
 	fmt.Fprintf(w, "%s/%s", bytes.TrimRight([]byte(*baseURI), "/"), token)
+	newCounter.WithLabelValues("200", r.Method).Add(1)
 }

@@ -1,36 +1,70 @@
-hash: 6df65d2df0a49c8160a0999876b1633d5af66b35e1360c4868496c9a0683009b
-updated: 2016-08-23T14:19:50.659237907-07:00
+hash: 1e06c791463fd50633496a3fa91f85266b810add689a561ad1a678ef32517953
+updated: 2016-08-23T16:36:20.985418775-07:00
 imports:
+- name: github.com/beorn7/perks
+  version: 4c0e84591b9aa9e6dcfdf3e020114cd81f89d5f9
+  subpackages:
+  - quantile
+- name: github.com/coreos/discovery.etcd.io
+  version: f7234eb034acf92a740ace91a787b4a7203c20c6
+  subpackages:
+  - http
+  - pkg/lockstring
+  - handlers
 - name: github.com/coreos/etcd
-  version: 9efa00d1030d4bf62eb8e5ec130023aeb1b8e2d0
+  version: ""
   subpackages:
   - client
   - pkg/pathutil
   - pkg/types
 - name: github.com/coreos/go-etcd
-  version: 003851be7bb0694fe3cc457a49529a19388ee7cf
+  version: 18116c95645350252b7b44fedebf72c4208e87e6
   subpackages:
   - etcd
 - name: github.com/coreos/go-systemd
-  version: d6c05a1dcbb5ac02b7653da4d99e5db340c20778
+  version: ""
   subpackages:
   - activation
+- name: github.com/golang/protobuf
+  version: 888eb0692c857ec880338addf316bd662d5e630e
+  subpackages:
+  - proto
 - name: github.com/gorilla/context
-  version: 08b5f424b9271eedf6f9f0ce86cb9396ed337a42
+  version: 18116c95645350252b7b44fedebf72c4208e87e6
 - name: github.com/gorilla/handlers
-  version: ee54c7b44cab12289237fb8631314790076e728b
+  version: ""
 - name: github.com/gorilla/mux
-  version: 0eeaf8392f5b04950925b8a69fe70f110fa7cbfc
+  version: ""
+- name: github.com/matttproud/golang_protobuf_extensions
+  version: c12348ce28de40eed0136aa2b644d0ee0650e56c
+  subpackages:
+  - pbutil
+- name: github.com/prometheus/client_golang
+  version: c5b7fccd204277076155f10851dad72b76a49317
+  subpackages:
+  - prometheus
+- name: github.com/prometheus/client_model
+  version: fa8ad6fec33561be4280a8f0514318c79d7f6cb6
+  subpackages:
+  - go
+- name: github.com/prometheus/common
+  version: ebdfc6da46522d58825777cf1f90490a5b1ef1d8
+  subpackages:
+  - expfmt
+  - model
+  - internal/bitbucket.org/ww/goautoneg
+- name: github.com/prometheus/procfs
+  version: abf152e5f3e97f2fafac028d2cc06c1feb87ffa5
 - name: github.com/rsc/devweb
-  version: 29cc9e1b05561da928b582c78d1283ffeaa31f93
+  version: 18116c95645350252b7b44fedebf72c4208e87e6
   subpackages:
   - slave
 - name: github.com/ugorji/go
-  version: 4a1cb5252a6951f715a85d0e4be334c2a2dbf2a2
+  version: 18116c95645350252b7b44fedebf72c4208e87e6
   subpackages:
   - codec
 - name: golang.org/x/net
-  version: 7394c112eae4dba7e96bfcfe738e6373d61772b4
+  version: 18116c95645350252b7b44fedebf72c4208e87e6
   subpackages:
   - context
 testImports: []

@@ -9,26 +9,39 @@ import (
 	"net/http"
 	"net/url"
 	"path"
+	"strconv"
 
+	"github.com/coreos/discovery.etcd.io/handlers/httperror"
 	"github.com/coreos/discovery.etcd.io/pkg/lockstring"
-)
-
-var (
-	currentLeader lockstring.LockString
+	"github.com/prometheus/client_golang/prometheus"
 )
 
 func init() {
+	tokenCounter = prometheus.NewCounterVec(
+		prometheus.CounterOpts{
+			Name: "endpoint_token_requests_total",
+			Help: "How many /token requests processed, partitioned by status code and HTTP method.",
+		},
+		[]string{"code", "method"},
+	)
+	prometheus.MustRegister(tokenCounter)
+
 	currentLeader.Set("127.0.0.1:4001")
 }
+
+var (
+	currentLeader lockstring.LockString
+	tokenCounter  *prometheus.CounterVec
+)
 
 func proxyRequest(r *http.Request) (*http.Response, error) {
 	body, _ := ioutil.ReadAll(r.Body)
 
 	for i := 0; i <= 10; i++ {
 		u := url.URL{
-			Scheme: "http",
-			Host: currentLeader.String(),
-			Path: path.Join("v2", "keys", "_etcd", "registry", r.URL.Path),
+			Scheme:   "http",
+			Host:     currentLeader.String(),
+			Path:     path.Join("v2", "keys", "_etcd", "registry", r.URL.Path),
 			RawQuery: r.URL.RawQuery,
 		}
 
@@ -76,10 +89,11 @@ func TokenHandler(w http.ResponseWriter, r *http.Request) {
 	resp, err := proxyRequest(r)
 	if err != nil {
 		log.Printf("Error making request: %v", err)
-		http.Error(w, "", 500)
+		httperror.Error(w, r, "", 500, tokenCounter)
 	}
 
 	copyHeader(w.Header(), resp.Header)
 	w.WriteHeader(resp.StatusCode)
 	io.Copy(w, resp.Body)
+	tokenCounter.WithLabelValues(strconv.Itoa(resp.StatusCode), r.Method).Add(1)
 }
