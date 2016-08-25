@@ -2,13 +2,13 @@
 # build discovery statically for the docker container, then build the container
 
 cat >.payload <<EOF
-go run third_party.go clean -i net
-go run third_party.go install -tags netgo std
-CGO_ENABLED=0 go run third_party.go build -a -tags netgo --ldflags '-w -extldflags=-static' -o bin/discovery-linux64-static github.com/coreos/discovery.etcd.io
+go clean -i net
+go install -tags netgo std
+CGO_ENABLED=0 go build -a -tags netgo --ldflags '-w -extldflags=-static' -o bin/discovery-linux64-static github.com/coreos/discovery.etcd.io
 EOF
 
 echo "building statically-linked discovery.etcd.io..."
-docker run --rm -v "$PWD":/usr/src/myapp -w /usr/src/myapp golang:latest bash .payload
+docker run --rm -v "$PWD":/usr/local/go/src/github.com/coreos/discovery.etcd.io -it -w /usr/local/go/src/github.com/coreos/discovery.etcd.io golang:latest bash .payload
 rm -f .payload
 
 echo "building docker container..."
