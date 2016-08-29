@@ -1,14 +1,15 @@
-hash: 1e06c791463fd50633496a3fa91f85266b810add689a561ad1a678ef32517953
-updated: 2016-08-23T16:36:20.985418775-07:00
+hash: 0ef6e3e6faf59887172ea1c368c5cff22154e1d61963fbfd07d45130d6745ca4
+updated: 2016-08-25T13:57:44.181226721-07:00
 imports:
 - name: github.com/beorn7/perks
-  version: 4c0e84591b9aa9e6dcfdf3e020114cd81f89d5f9
+  version: 4827e50a7ee8127a95359572cec4ddad13ec2e75
   subpackages:
   - quantile
 - name: github.com/coreos/discovery.etcd.io
-  version: f7234eb034acf92a740ace91a787b4a7203c20c6
+  version: 4827e50a7ee8127a95359572cec4ddad13ec2e75
   subpackages:
   - http
+  - handlers/httperror
   - pkg/lockstring
   - handlers
 - name: github.com/coreos/etcd
@@ -17,54 +18,110 @@ imports:
   - client
   - pkg/pathutil
   - pkg/types
-- name: github.com/coreos/go-etcd
-  version: 18116c95645350252b7b44fedebf72c4208e87e6
-  subpackages:
-  - etcd
 - name: github.com/coreos/go-systemd
   version: ""
   subpackages:
   - activation
+- name: github.com/fsnotify/fsnotify
+  version: f12c6236fe7b5cf6bcf30e5935d08cb079d78334
 - name: github.com/golang/protobuf
-  version: 888eb0692c857ec880338addf316bd662d5e630e
+  version: 4827e50a7ee8127a95359572cec4ddad13ec2e75
   subpackages:
   - proto
 - name: github.com/gorilla/context
-  version: 18116c95645350252b7b44fedebf72c4208e87e6
+  version: 4827e50a7ee8127a95359572cec4ddad13ec2e75
 - name: github.com/gorilla/handlers
   version: ""
 - name: github.com/gorilla/mux
   version: ""
+- name: github.com/hashicorp/hcl
+  version: baeb59c710717b06aac1dbe2270e8192ec593244
+  subpackages:
+  - hcl/ast
+  - hcl/parser
+  - hcl/token
+  - json/parser
+  - hcl/scanner
+  - hcl/strconv
+  - json/scanner
+  - json/token
+- name: github.com/kr/fs
+  version: 2788f0dbd16903de03cb8186e5c7d97b69ad387b
+- name: github.com/magiconair/properties
+  version: 61b492c03cf472e0c6419be5899b8e0dc28b1b88
 - name: github.com/matttproud/golang_protobuf_extensions
-  version: c12348ce28de40eed0136aa2b644d0ee0650e56c
+  version: 4827e50a7ee8127a95359572cec4ddad13ec2e75
   subpackages:
   - pbutil
+- name: github.com/mitchellh/mapstructure
+  version: ca63d7c062ee3c9f34db231e352b60012b4fd0c1
+- name: github.com/ogier/pflag
+  version: 45c278ab3607870051a2ea9040bb85fcb8557481
+- name: github.com/pelletier/go-buffruneio
+  version: df1e16fde7fc330a0ca68167c23bf7ed6ac31d6d
+- name: github.com/pelletier/go-toml
+  version: 64ff1ea4d585bc1fca65e6331eb8239f2ff31845
+- name: github.com/pkg/errors
+  version: 17b591df37844cde689f4d5813e5cea0927d8dd2
+- name: github.com/pkg/sftp
+  version: a71e8f580e3b622ebff585309160b1cc549ef4d2
 - name: github.com/prometheus/client_golang
-  version: c5b7fccd204277076155f10851dad72b76a49317
+  version: ""
   subpackages:
   - prometheus
 - name: github.com/prometheus/client_model
-  version: fa8ad6fec33561be4280a8f0514318c79d7f6cb6
+  version: 4827e50a7ee8127a95359572cec4ddad13ec2e75
   subpackages:
   - go
 - name: github.com/prometheus/common
-  version: ebdfc6da46522d58825777cf1f90490a5b1ef1d8
+  version: 4827e50a7ee8127a95359572cec4ddad13ec2e75
   subpackages:
   - expfmt
   - model
   - internal/bitbucket.org/ww/goautoneg
 - name: github.com/prometheus/procfs
-  version: abf152e5f3e97f2fafac028d2cc06c1feb87ffa5
+  version: 4827e50a7ee8127a95359572cec4ddad13ec2e75
 - name: github.com/rsc/devweb
-  version: 18116c95645350252b7b44fedebf72c4208e87e6
+  version: 4827e50a7ee8127a95359572cec4ddad13ec2e75
   subpackages:
   - slave
+- name: github.com/spf13/afero
+  version: 20500e2abd0d1f4564a499e83d11d6c73cd58c27
+  subpackages:
+  - mem
+  - sftp
+- name: github.com/spf13/cast
+  version: e31f36ffc91a2ba9ddb72a4b6a607ff9b3d3cb63
+- name: github.com/spf13/jwalterweatherman
+  version: 33c24e77fb80341fe7130ee7c594256ff08ccc46
+- name: github.com/spf13/pflag
+  version: 103ce5cd2042f2fe629c1957abb64ab3e7f50235
+- name: github.com/spf13/viper
+  version: 7fb2782df3d83e0036cc89f461ed0422628776f4
 - name: github.com/ugorji/go
-  version: 18116c95645350252b7b44fedebf72c4208e87e6
+  version: 4827e50a7ee8127a95359572cec4ddad13ec2e75
   subpackages:
   - codec
+- name: golang.org/x/crypto
+  version: 351dc6a5bf92a5f2ae22fadeee08eb6a45aa2d93
+  subpackages:
+  - ssh
+  - curve25519
+  - ed25519
+  - ed25519/internal/edwards25519
 - name: golang.org/x/net
-  version: 18116c95645350252b7b44fedebf72c4208e87e6
+  version: 4827e50a7ee8127a95359572cec4ddad13ec2e75
   subpackages:
   - context
+- name: golang.org/x/sys
+  version: a646d33e2ee3172a661fc09bca23bb4889a41bc8
+  subpackages:
+  - unix
+- name: golang.org/x/text
+  version: d69c40b4be55797923cec7457fac7a244d91a9b6
+  subpackages:
+  - transform
+  - unicode/norm
+- name: gopkg.in/yaml.v2
+  version: e4d366fc3c7938e2958e662b4258c7a89e1f0e3e
 testImports: []

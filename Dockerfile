@@ -6,5 +6,4 @@ EXPOSE 8087
 
 ADD bin/discovery-linux64-static /discovery
 
-CMD ["--addr=:8087"]
 ENTRYPOINT ["/discovery"]
