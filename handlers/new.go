@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"net/url"
 	"path"
 	"strconv"
 	"time"
@@ -50,6 +51,9 @@ func Setup() {
 		// set timeout per request to fail fast when the target endpoint is unavailable
 		HeaderTimeoutPerRequest: time.Second,
 	}
+
+	u, _ := url.Parse(viper.GetString("etcd"))
+	currentLeader.Set(u.Host)
 }
 
 func setupToken(size int) (string, error) {
