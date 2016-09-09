@@ -21,14 +21,14 @@ func fail(err string) {
 	os.Exit(2) // default go flag error code
 }
 
-func getValidUrlOrExit(givenUrl string) string {
+func mustHostOnlyURL(givenUrl string) string {
 	u, err := url.Parse(givenUrl)
 
 	if err != nil {
 		fail(fmt.Sprintf("Invalid url given: %v", err))
 	}
 
-	if len(u.Path) > 1 || (len(u.Path) == 1 && u.Path != "/") {
+	if len(u.Path) != 0 && u.Path != "/" {
 		fail(fmt.Sprintf("Expected url without path (%v)", u.Path))
 	}
 
@@ -64,10 +64,10 @@ func init() {
 
 func main() {
 	log.SetFlags(0)
-	viper.Set("etcd", getValidUrlOrExit(viper.GetString("etcd")))
-	viper.Set("host", getValidUrlOrExit(viper.GetString("host")))
+	etcdHost := mustHostOnlyURL(viper.GetString("etcd"))
+	discHost := mustHostOnlyURL(viper.GetString("host"))
 
-	handling.Setup()
+	handling.Setup(etcdHost, discHost)
 
 	err := http.ListenAndServe(viper.GetString("addr"), nil)
 	if err != nil {

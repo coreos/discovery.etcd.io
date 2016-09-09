@@ -16,12 +16,12 @@ import (
 	"github.com/coreos/discovery.etcd.io/handlers/httperror"
 	"github.com/coreos/etcd/client"
 	"github.com/prometheus/client_golang/prometheus"
-	"github.com/spf13/viper"
 	"golang.org/x/net/context"
 )
 
 var newCounter *prometheus.CounterVec
 var cfg *client.Config
+var discHost string
 
 func init() {
 	newCounter = prometheus.NewCounterVec(
@@ -44,16 +44,17 @@ func generateCluster() string {
 	return hex.EncodeToString(b)
 }
 
-func Setup() {
+func Setup(etcdHost, disc string) {
 	cfg = &client.Config{
-		Endpoints: []string{viper.GetString("etcd")},
+		Endpoints: []string{etcdHost},
 		Transport: client.DefaultTransport,
 		// set timeout per request to fail fast when the target endpoint is unavailable
 		HeaderTimeoutPerRequest: time.Second,
 	}
 
-	u, _ := url.Parse(viper.GetString("etcd"))
+	u, _ := url.Parse(etcdHost)
 	currentLeader.Set(u.Host)
+	discHost = disc
 }
 
 func setupToken(size int) (string, error) {
@@ -113,6 +114,6 @@ func NewTokenHandler(w http.ResponseWriter, r *http.Request) {
 
 	log.Println("New cluster created", token)
 
-	fmt.Fprintf(w, "%s/%s", bytes.TrimRight([]byte(viper.GetString("host")), "/"), token)
+	fmt.Fprintf(w, "%s/%s", bytes.TrimRight([]byte(discHost), "/"), token)
 	newCounter.WithLabelValues("200", r.Method).Add(1)
 }
