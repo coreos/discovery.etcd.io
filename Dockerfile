@@ -1,9 +1,8 @@
-FROM scratch
+FROM golang:1.6
 MAINTAINER "CoreOS, Inc"
 EXPOSE 8087
 
-# You need to build bin/discovery-linux64-static first; check build-static.
+COPY . /go/src/github.com/coreos/discovery.etcd.io
+RUN go install -v github.com/coreos/discovery.etcd.io
 
-ADD bin/discovery-linux64-static /discovery
-
-ENTRYPOINT ["/discovery"]
+CMD ["discovery.etcd.io"]
