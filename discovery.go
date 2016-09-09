@@ -1,8 +1,11 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
+	"net/url"
+	"os"
 
 	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
@@ -11,6 +14,38 @@ import (
 
 	handling "github.com/coreos/discovery.etcd.io/http"
 )
+
+func fail(err string) {
+	log.Print(err)
+	pflag.PrintDefaults()
+	os.Exit(2) // default go flag error code
+}
+
+func mustHostOnlyURL(givenUrl string) string {
+	u, err := url.Parse(givenUrl)
+
+	if err != nil {
+		fail(fmt.Sprintf("Invalid url given: %v", err))
+	}
+
+	if len(u.Path) != 0 && u.Path != "/" {
+		fail(fmt.Sprintf("Expected url without path (%v)", u.Path))
+	}
+
+	if u.RawQuery != "" {
+		fail(fmt.Sprintf("Expected url without query (?%v)", u.RawQuery))
+	}
+
+	if u.Fragment != "" {
+		fail(fmt.Sprintf("Expected url without fragment (%v)", u.Fragment))
+	}
+
+	if u.Host == "" {
+		fail(fmt.Sprint("Expected hostname (none given)"))
+	}
+
+	return u.Scheme + "://" + u.Host
+}
 
 func init() {
 	viper.SetEnvPrefix("disc")
@@ -29,7 +64,10 @@ func init() {
 
 func main() {
 	log.SetFlags(0)
-	handling.Setup()
+	etcdHost := mustHostOnlyURL(viper.GetString("etcd"))
+	discHost := mustHostOnlyURL(viper.GetString("host"))
+
+	handling.Setup(etcdHost, discHost)
 
 	err := http.ListenAndServe(viper.GetString("addr"), nil)
 	if err != nil {

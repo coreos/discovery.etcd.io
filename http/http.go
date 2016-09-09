@@ -12,8 +12,8 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func Setup() {
-	handlers.Setup()
+func Setup(etcdHost, discHost string) {
+	handlers.Setup(etcdHost, discHost)
 	r := mux.NewRouter()
 
 	r.HandleFunc("/", handlers.HomeHandler)
