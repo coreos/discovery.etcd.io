@@ -8,8 +8,14 @@ CGO_ENABLED=0 go build -a -tags netgo --ldflags '-w -extldflags=-static' -o bin/
 EOF
 
 echo "building statically-linked discovery.etcd.io..."
-docker run --rm -v "$PWD":/usr/local/go/src/github.com/coreos/discovery.etcd.io -it -w /usr/local/go/src/github.com/coreos/discovery.etcd.io golang:latest bash .payload
+
+# default gopath
+DEST="/usr/local/go/src/github.com/coreos/discovery.etcd.io"
+
+docker run --rm -v "$PWD":$DEST -t -w $DEST golang:latest bash .payload
 rm -f .payload
+
+
 
 echo "building docker container..."
 docker build .
