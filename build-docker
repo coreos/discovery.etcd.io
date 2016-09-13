@@ -10,6 +10,7 @@ EOF
 echo "building statically-linked discovery.etcd.io..."
 
 DEST="/usr/local/go/src/github.com/coreos/discovery.etcd.io"
+# mount current source in default gopath on container; build
 docker run --rm -v "$PWD":$DEST -t -w $DEST golang:latest bash .payload
 rm -f .payload
 
