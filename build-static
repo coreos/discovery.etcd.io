@@ -1,0 +1,16 @@
+#!/bin/sh -e
+# build a static binary inside a fresh golang:latest docker container
+
+cat >.payload <<EOF
+go clean -i net
+go install -tags netgo std
+CGO_ENABLED=0 go build -a -tags netgo --ldflags '-w -extldflags=-static' -o bin/discovery-linux64-static github.com/coreos/discovery.etcd.io
+EOF
+
+echo "building statically-linked discovery.etcd.io..."
+
+# mount the current copy of discovery.etcd.io into the container's
+# gopath so it matches vendoring, etc correctly
+REMOTEDEST="/usr/local/go/src/github.com/coreos/discovery.etcd.io"
+docker run --rm -v "$PWD":$REMOTEDEST -t -w $REMOTEDEST golang:latest bash .payload
+rm -f .payload

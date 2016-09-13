@@ -28,6 +28,7 @@ docker run -d -p 80:8087 -e DISC_ETCD=http://etcd.example.com:2379 -e DISC_HOST=
 discovery.etcd.io uses devweb for easy development. It is simple to get started:
 
 ```
-./devweb
-curl --verbose -X PUT localhost:8087/new
+$ ./devweb
+# in another terminal
+$ curl --verbose -X PUT localhost:8087/new
 ```
