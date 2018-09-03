@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"bytes"
+	"context"
 	"crypto/rand"
 	"encoding/hex"
 	"errors"
@@ -16,12 +17,9 @@ import (
 	"github.com/coreos/discovery.etcd.io/handlers/httperror"
 	"github.com/coreos/etcd/client"
 	"github.com/prometheus/client_golang/prometheus"
-	"golang.org/x/net/context"
 )
 
 var newCounter *prometheus.CounterVec
-var cfg *client.Config
-var discHost string
 
 func init() {
 	newCounter = prometheus.NewCounterVec(
@@ -44,40 +42,45 @@ func generateCluster() string {
 	return hex.EncodeToString(b)
 }
 
-func Setup(etcdHost, disc string) {
-	cfg = &client.Config{
-		Endpoints: []string{etcdHost},
-		Transport: client.DefaultTransport,
-		// set timeout per request to fail fast when the target endpoint is unavailable
-		HeaderTimeoutPerRequest: time.Second,
+func Setup(etcdCURL, disc string) *State {
+	u, _ := url.Parse(etcdCURL)
+	return &State{
+		etcdHost:      etcdCURL,
+		etcdCURL:      u,
+		currentLeader: u.Host,
+		discHost:      disc,
 	}
-
-	u, _ := url.Parse(etcdHost)
-	currentLeader.Set(u.Host)
-	discHost = disc
 }
 
-func setupToken(size int) (string, error) {
+func (st *State) setupToken(size int) (string, error) {
 	token := generateCluster()
 	if token == "" {
 		return "", errors.New("Couldn't generate a token")
 	}
 
-	c, _ := client.New(*cfg)
+	c, _ := client.New(client.Config{
+		Endpoints: []string{st.endpoint()},
+		Transport: client.DefaultTransport,
+		// set timeout per request to fail fast when the target endpoint is unavailable
+		HeaderTimeoutPerRequest: time.Second,
+	})
 	kapi := client.NewKeysAPI(c)
 
 	key := path.Join("_etcd", "registry", token)
-
 	resp, err := kapi.Create(context.Background(), path.Join(key, "_config", "size"), strconv.Itoa(size))
 	if err != nil {
-		return "", errors.New(fmt.Sprintf("Couldn't setup state %v %v", resp, err))
+		return "", fmt.Errorf("Couldn't setup state %v %v", resp, err)
 	}
-
 	return token, nil
 }
 
-func deleteToken(token string) error {
-	c, _ := client.New(*cfg)
+func (st *State) deleteToken(token string) error {
+	c, _ := client.New(client.Config{
+		Endpoints: []string{st.endpoint()},
+		Transport: client.DefaultTransport,
+		// set timeout per request to fail fast when the target endpoint is unavailable
+		HeaderTimeoutPerRequest: time.Second,
+	})
 	kapi := client.NewKeysAPI(c)
 
 	if token == "" {
@@ -89,11 +92,12 @@ func deleteToken(token string) error {
 		path.Join("_etcd", "registry", token),
 		&client.DeleteOptions{Recursive: true},
 	)
-
 	return err
 }
 
-func NewTokenHandler(w http.ResponseWriter, r *http.Request) {
+func NewTokenHandler(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+	st := ctx.Value(stateKey).(*State)
+
 	var err error
 	size := 3
 	s := r.FormValue("size")
@@ -104,7 +108,7 @@ func NewTokenHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	}
-	token, err := setupToken(size)
+	token, err := st.setupToken(size)
 
 	if err != nil {
 		log.Printf("setupToken returned: %v", err)
@@ -114,6 +118,6 @@ func NewTokenHandler(w http.ResponseWriter, r *http.Request) {
 
 	log.Println("New cluster created", token)
 
-	fmt.Fprintf(w, "%s/%s", bytes.TrimRight([]byte(discHost), "/"), token)
+	fmt.Fprintf(w, "%s/%s", bytes.TrimRight([]byte(st.discHost), "/"), token)
 	newCounter.WithLabelValues("200", r.Method).Add(1)
 }

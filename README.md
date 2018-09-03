@@ -1,5 +1,9 @@
 # discovery.etcd.io
 
+[![Build Status](https://img.shields.io/travis/coreos/discovery.etcd.io.svg?style=flat-square)](https://travis-ci.org/coreos/discovery.etcd.io)
+[![Build Status](https://semaphoreci.com/api/v1/coreos/discovery.etcd.io/branches/master/shields_badge.svg)](https://semaphoreci.com/coreos/discovery.etcd.io)
+[![Godoc](http://img.shields.io/badge/go-documentation-blue.svg?style=flat-square)](https://godoc.org/github.com/coreos/discovery.etcd.io)
+
 This code powers the public service at https://discovery.etcd.io. The API is
 documented in the [etcd clustering documentation](https://github.com/coreos/etcd/blob/master/Documentation/dev-internal/discovery_protocol.md#public-discovery-service).
 

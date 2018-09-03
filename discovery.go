@@ -1,18 +1,18 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"net/http"
 	"net/url"
 	"os"
 
-	"github.com/spf13/pflag"
-	"github.com/spf13/viper"
+	handling "github.com/coreos/discovery.etcd.io/http"
 
 	"github.com/coreos/go-systemd/activation"
-
-	handling "github.com/coreos/discovery.etcd.io/http"
+	"github.com/spf13/pflag"
+	"github.com/spf13/viper"
 )
 
 func fail(err string) {
@@ -66,10 +66,13 @@ func main() {
 	log.SetFlags(0)
 	etcdHost := mustHostOnlyURL(viper.GetString("etcd"))
 	discHost := mustHostOnlyURL(viper.GetString("host"))
+	webAddr := viper.GetString("addr")
 
-	handling.Setup(etcdHost, discHost)
+	handling.Setup(context.Background(), etcdHost, discHost)
 
-	err := http.ListenAndServe(viper.GetString("addr"), nil)
+	log.Printf("discovery server started with etcd %q and host %q", etcdHost, discHost)
+	log.Printf("discovery serving on %s", webAddr)
+	err := http.ListenAndServe(webAddr, nil)
 	if err != nil {
 		panic(err)
 	}

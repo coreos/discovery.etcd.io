@@ -1,38 +1,57 @@
 package http
 
 import (
+	"context"
 	"net/http"
 	"os"
 
-	gorillaHandlers "github.com/gorilla/handlers"
-
 	"github.com/coreos/discovery.etcd.io/handlers"
-	"github.com/prometheus/client_golang/prometheus"
 
+	gorillaHandlers "github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
+	"github.com/prometheus/client_golang/prometheus"
 )
 
-func Setup(etcdHost, discHost string) {
-	handlers.Setup(etcdHost, discHost)
-	r := mux.NewRouter()
-
-	r.HandleFunc("/", handlers.HomeHandler)
-	r.HandleFunc("/new", handlers.NewTokenHandler)
-	r.HandleFunc("/health", handlers.HealthHandler)
-	r.HandleFunc("/robots.txt", handlers.RobotsHandler)
-
-	// Only allow exact tokens with GETs and PUTs
-	r.HandleFunc("/{token:[a-f0-9]{32}}", handlers.TokenHandler).
-		Methods("GET", "PUT")
-	r.HandleFunc("/{token:[a-f0-9]{32}}/", handlers.TokenHandler).
-		Methods("GET", "PUT")
-	r.HandleFunc("/{token:[a-f0-9]{32}}/{machine}", handlers.TokenHandler).
-		Methods("GET", "PUT", "DELETE")
-	r.HandleFunc("/{token:[a-f0-9]{32}}/_config/size", handlers.TokenHandler).
-		Methods("GET")
-
-	logH := gorillaHandlers.LoggingHandler(os.Stdout, r)
+func Setup(ctx context.Context, etcdHost, discHost string) {
+	handler := RegisterHandlers(ctx, etcdHost, discHost)
+	logH := gorillaHandlers.LoggingHandler(os.Stdout, handler)
 
 	http.Handle("/", logH)
 	http.Handle("/metrics", prometheus.Handler())
+}
+
+func RegisterHandlers(ctx context.Context, etcdHost, discHost string) http.Handler {
+	st := handlers.Setup(etcdHost, discHost)
+	r := mux.NewRouter()
+
+	r.HandleFunc("/", handlers.HomeHandler)
+	r.Handle("/new", &handlers.ContextAdapter{
+		Ctx:     ctx,
+		Handler: handlers.With(handlers.ContextHandlerFunc(handlers.NewTokenHandler), st),
+	})
+	r.Handle("/health", &handlers.ContextAdapter{
+		Ctx:     ctx,
+		Handler: handlers.With(handlers.ContextHandlerFunc(handlers.HealthHandler), st),
+	})
+	r.HandleFunc("/robots.txt", handlers.RobotsHandler)
+
+	// Only allow exact tokens with GETs and PUTs
+	r.Handle("/{token:[a-f0-9]{32}}", &handlers.ContextAdapter{
+		Ctx:     ctx,
+		Handler: handlers.With(handlers.ContextHandlerFunc(handlers.TokenHandler), st),
+	}).Methods("GET", "PUT")
+	r.Handle("/{token:[a-f0-9]{32}}/", &handlers.ContextAdapter{
+		Ctx:     ctx,
+		Handler: handlers.With(handlers.ContextHandlerFunc(handlers.TokenHandler), st),
+	}).Methods("GET", "PUT")
+	r.Handle("/{token:[a-f0-9]{32}}/{machine}", &handlers.ContextAdapter{
+		Ctx:     ctx,
+		Handler: handlers.With(handlers.ContextHandlerFunc(handlers.TokenHandler), st),
+	}).Methods("GET", "PUT", "DELETE")
+	r.Handle("/{token:[a-f0-9]{32}}/_config/size", &handlers.ContextAdapter{
+		Ctx:     ctx,
+		Handler: handlers.With(handlers.ContextHandlerFunc(handlers.TokenHandler), st),
+	}).Methods("GET")
+
+	return r
 }
