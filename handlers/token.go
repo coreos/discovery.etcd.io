@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"bytes"
+	"context"
 	"errors"
 	"io"
 	"io/ioutil"
@@ -12,7 +13,6 @@ import (
 	"strconv"
 
 	"github.com/coreos/discovery.etcd.io/handlers/httperror"
-	"github.com/coreos/discovery.etcd.io/pkg/lockstring"
 	"github.com/prometheus/client_golang/prometheus"
 )
 
@@ -27,18 +27,15 @@ func init() {
 	prometheus.MustRegister(tokenCounter)
 }
 
-var (
-	currentLeader lockstring.LockString
-	tokenCounter  *prometheus.CounterVec
-)
+var tokenCounter *prometheus.CounterVec
 
-func proxyRequest(r *http.Request) (*http.Response, error) {
+func (st *State) proxyRequest(r *http.Request) (*http.Response, error) {
 	body, _ := ioutil.ReadAll(r.Body)
 
 	for i := 0; i <= 10; i++ {
 		u := url.URL{
 			Scheme:   "http",
-			Host:     currentLeader.String(),
+			Host:     st.getCurrentLeader(),
 			Path:     path.Join("v2", "keys", "_etcd", "registry", r.URL.Path),
 			RawQuery: r.URL.RawQuery,
 		}
@@ -64,7 +61,7 @@ func proxyRequest(r *http.Request) (*http.Response, error) {
 			if err != nil {
 				return nil, err
 			}
-			currentLeader.Set(u.Host)
+			st.setCurrentLeader(u.Host)
 			continue
 		}
 
@@ -83,8 +80,10 @@ func copyHeader(dst, src http.Header) {
 	}
 }
 
-func TokenHandler(w http.ResponseWriter, r *http.Request) {
-	resp, err := proxyRequest(r)
+func TokenHandler(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+	st := ctx.Value(stateKey).(*State)
+
+	resp, err := st.proxyRequest(r)
 	if err != nil {
 		log.Printf("Error making request: %v", err)
 		httperror.Error(w, r, "", 500, tokenCounter)

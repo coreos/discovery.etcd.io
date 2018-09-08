@@ -1,4 +1,4 @@
-FROM golang:1.6
+FROM golang:1.8.3
 MAINTAINER "CoreOS, Inc"
 EXPOSE 8087
 
