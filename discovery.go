@@ -77,7 +77,7 @@ func main() {
 		panic(err)
 	}
 
-	listeners, err := activation.Listeners(true)
+	listeners, err := activation.Listeners()
 	if err != nil {
 		panic(err)
 	}

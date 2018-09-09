@@ -3,11 +3,11 @@ language: go
 sudo: false
 
 go:
-- 1.8.3
+- 1.10.3
 - tip
 
 install:
 - go get -v -d github.com/coreos/discovery.etcd.io
 
 script:
-- ./tests.sh
+- OS=linux  GOARCH=amd64 ETCD_VERSIONS="v3.2.24 v3.3.9" ./tests.sh

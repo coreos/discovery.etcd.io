@@ -24,8 +24,8 @@ if [[ "${vetRes}" ]]; then
 fi
 
 <<COMMENT
-OS=linux  GOARCH=amd64 ETCD_VERSIONS="v3.1.9 v3.2.2" ./tests.sh
-OS=darwin GOARCH=amd64 ETCD_VERSIONS="v3.1.9 v3.2.2" ./tests.sh
+OS=linux  GOARCH=amd64 ETCD_VERSIONS="v3.2.24 v3.3.9" ./tests.sh
+OS=darwin GOARCH=amd64 ETCD_VERSIONS="v3.2.24 v3.3.9" ./tests.sh
 COMMENT
 echo "Downloading etcd releases..."
 OS=linux
@@ -48,7 +48,7 @@ for ver in ${ETCD_VERSIONS}; do
   echo "Downloading ${file}"
 
   set +e
-  curl --fail -L https://github.com/coreos/etcd/releases/download/${ver}/${file} -o /tmp/${file}
+  curl --fail -L https://github.com/etcd-io/etcd/releases/download/${ver}/${file} -o /tmp/${file}
   result=$?
   set -e
   case $result in
