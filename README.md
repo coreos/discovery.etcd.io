@@ -1,5 +1,13 @@
 # discovery.etcd.io
 
+**deprecated**
+
+If you are having issues with discovery.etcd.io please file a ticket here: https://github.com/etcd-io/discovery.etcd.io
+
+**deprecated**
+
+# Old Readme
+
 [![Build Status](https://img.shields.io/travis/coreos/discovery.etcd.io.svg?style=flat-square)](https://travis-ci.org/coreos/discovery.etcd.io)
 [![Build Status](https://semaphoreci.com/api/v1/coreos/discovery.etcd.io/branches/master/shields_badge.svg)](https://semaphoreci.com/coreos/discovery.etcd.io)
 [![Godoc](http://img.shields.io/badge/go-documentation-blue.svg?style=flat-square)](https://godoc.org/github.com/coreos/discovery.etcd.io)
