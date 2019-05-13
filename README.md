@@ -1,10 +1,12 @@
 # discovery.etcd.io
 
-**deprecated**
 
 If you are having issues with discovery.etcd.io please file a ticket here: https://github.com/etcd-io/discovery.etcd.io
 
 **deprecated**
+<br /><br /><br /><br /><br /><br /><br /><br /><br />
+<br /><br /><br /><br /><br /><br /><br /><br /><br />
+
 
 # Old Readme
 
